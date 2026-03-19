@@ -1,0 +1,1219 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Darko Music Foundation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./assets/js/plugins/tailwindcss.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <script src="./assets/js/plugins/gsap.min.js"></script>
+    <script src="./assets/js/plugins/ScrollTrigger.min.js"></script>
+    <script src="./assets/js/plugins/lenis.min.js"></script>
+
+    <style>
+      html {
+        scroll-behavior: auto !important;
+      }
+      body {
+        font-family: "Instrument Sans", sans-serif;
+        color: #003a2e;
+        background-color: #ffffff;
+      }
+      .font-gill {
+        font-family:
+          "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+      }
+      .font-gilroy {
+        font-family:
+          "Instrument Sans", sans-serif; /* Fallback as Gilroy is not standard web font */
+      }
+
+      .bg-primary {
+        background-color: #003a2e;
+      }
+      .text-primary {
+        color: #003a2e;
+      }
+      .border-primary {
+        border-color: #003a2e;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(0, 58, 46, 0.1);
+      }
+
+      /* Custom scrollbar for clean look */
+      /* ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #003a2e;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #e29332;
+      } */
+      /* Infinite Scroll Animation */
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      .animate-scroll {
+        animation: scroll 40s linear infinite;
+        width: max-content; /* Ensure container fits all items in a single line */
+      }
+
+      /* Pause animation on hover for accessibility/viewing */
+      .marquee-container:hover .animate-scroll {
+        animation-play-state: paused;
+      }
+
+      /* Card Hover Effects */
+      .marquee-card {
+        filter: grayscale(0.4);
+        transition:
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+          filter 0.5s ease;
+      }
+      .marquee-card:hover {
+        transform: rotate(0deg) scale(1.02) translateY(-20px) !important;
+        z-index: 10;
+        filter: grayscale(0);
+        box-shadow:
+          0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
+
+      /* Edge Fading Mask */
+      .marquee-mask {
+        mask-image: linear-gradient(
+          to right,
+          transparent,
+          black 10%,
+          black 90%,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent,
+          black 10%,
+          black 90%,
+          transparent
+        );
+      }
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+
+      /* Ensure no native scroll conflicts */
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      /* Fix for iframes blocking scroll on trackpads */
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-[#003A2E] selection:text-white">
+    <!-- Navigation -->
+    <nav
+      class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#003A2E]/10"
+    >
+      <div
+        class="max-w-[1280px] mx-auto px-6 h-24 flex items-center justify-between"
+      >
+        <!-- Left Links -->
+        <div class="hidden md:flex items-center gap-8 text-lg font-normal">
+          <a href="#" class="hover:opacity-70 transition-opacity">Our Story</a>
+          <a href="#" class="hover:opacity-70 transition-opacity">Our Work</a>
+          <a href="#" class="hover:opacity-70 transition-opacity">Voices</a>
+          <a href="#" class="hover:opacity-70 transition-opacity">Contact</a>
+        </div>
+
+        <!-- Mobile Menu Icon -->
+        <button class="md:hidden text-[#003A2E]">
+          <iconify-icon
+            icon="solar:hamburger-menu-linear"
+            width="32"
+          ></iconify-icon>
+        </button>
+
+        <!-- Logo (Center visual anchor, though structurally flexed) -->
+        <div
+          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
+          <img
+            src="./assets/images/logo-green.svg"
+            width="48"
+            height="72"
+            alt="Darko Music Foundation"
+          />
+        </div>
+
+        <!-- Right Buttons -->
+        <div class="hidden md:flex items-center gap-4">
+          <a
+            href="#"
+            class="px-6 py-3 rounded-full border border-[#003A2E] text-lg font-bold hover:bg-[#003A2E]/5 transition-colors"
+          >
+            Volunteer
+          </a>
+          <a
+            href="#"
+            class="px-6 py-3 rounded-full bg-[#003A2E] text-white text-lg font-bold flex items-center gap-2 hover:bg-[#7f1d1d] transition-colors"
+          >
+            <span>Donate</span>
+            <iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
+          </a>
+        </div>
+
+        <!-- Mobile Donate Icon -->
+        <a href="#" class="md:hidden text-[#003A2E]">
+          <iconify-icon icon="solar:heart-bold" width="28"></iconify-icon>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-20 pb-12 overflow-hidden">
+      <div class="flex flex-col items-center text-center">
+        <!-- Headlines -->
+        <div class="max-w-[1280px] px-6 mx-auto">
+          <h1
+            class="font-gill text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8"
+          >
+            TALENT IS UNIVERSAL.<br />
+            <span class="block mt-2">OPPORTUNITY IS NOT.</span>
+          </h1>
+
+          <p
+            class="font-gilroy text-xl md:text-2xl text-[#003A2E]/80 max-w-2xl mx-auto mb-12 leading-relaxed"
+          >
+            The Darko Music Foundation empowers students through the
+            transformative power of music education.
+          </p>
+
+          <!-- Buttons -->
+          <div
+            class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4"
+          >
+            <a
+              href="#"
+              class="w-full sm:w-auto px-8 py-4 rounded-full border border-[#003A2E] text-lg font-bold hover:bg-[#003A2E]/5 transition-colors text-center"
+            >
+              Volunteer
+            </a>
+            <a
+              href="#"
+              class="w-full sm:w-auto px-8 py-4 rounded-full bg-[#003A2E] text-white text-lg font-bold flex items-center justify-center gap-2 hover:bg-[#7f1d1d] transition-colors"
+            >
+              <span>Donate</span>
+              <iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
+            </a>
+          </div>
+        </div>
+
+        <!-- NEW: Infinite Marquee Section -->
+        <!-- The 'marquee-mask' class adds the fade effect on edges -->
+        <div class="w-full relative marquee-mask mt-4">
+          <div class="marquee-container overflow-hidden py-12">
+            <!-- The flex container acts as the track -->
+            <div class="flex animate-scroll gap-6 md:gap-8 px-6">
+              <!-- ORIGINAL SET OF CARDS -->
+              <!-- Card 1 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"
+              >
+                <img
+                  src="./assets/images/hero/1.jpg"
+                  alt="Violin"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 2 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4"
+              >
+                <img
+                  src="./assets/images/hero/2.jpg"
+                  alt="Piano"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 3 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"
+              >
+                <img
+                  src="./assets/images/hero/3.jpg"
+                  alt="Playing Piano"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 4 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2"
+              >
+                <img
+                  src="./assets/images/hero/4.jpg"
+                  alt="Conductor"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 5 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]"
+              >
+                <img
+                  src="./assets/images/hero/5.jpg"
+                  alt="Student"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 6 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/6.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 7 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/7.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 8 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/8.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 9 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/9.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 10 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/10.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 11 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/11.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 12 -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/12.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+
+              <!-- DUPLICATE SET FOR INFINITE LOOP (Must match exactly) -->
+              <!-- Card 1 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"
+              >
+                <img
+                  src="./assets/images/hero/1.jpg"
+                  alt="Violin"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 2 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4"
+              >
+                <img
+                  src="./assets/images/hero/2.jpg"
+                  alt="Piano"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 3 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"
+              >
+                <img
+                  src="./assets/images/hero/3.jpg"
+                  alt="Playing Piano"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 4 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2"
+              >
+                <img
+                  src="./assets/images/hero/4.jpg"
+                  alt="Conductor"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 5 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]"
+              >
+                <img
+                  src="./assets/images/hero/5.jpg"
+                  alt="Student"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 6 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/6.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 7  Duplicate-->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/7.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 8 Duplicate-->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/8.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 9  Duplicate-->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/9.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 10 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/10.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 11 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/11.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <!-- Card 12 Duplicate -->
+              <div
+                class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"
+              >
+                <img
+                  src="./assets/images/hero/12.jpg"
+                  alt="Guitar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Text Section -->
+    <section class="pt-24 pb-6">
+      <div
+        class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start"
+      >
+        <div class="lg:col-span-4">
+          <h2
+            class="text-4xl md:text-5xl font-medium tracking-tight leading-tight"
+          >
+            Bridging the<br />Sonic Gap.
+          </h2>
+        </div>
+        <div class="lg:col-span-8">
+          <p
+            class="text-xl md:text-2xl font-gilroy text-[#003A2E]/80 leading-relaxed"
+          >
+            We don't just teach music; we build character. By replacing idle
+            time with disciplined practice, we transform the trajectory of
+            public school students through the power of creative education.
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- Large Image with Overlays -->
+    <div
+      class="relative w-full h-[500px] md:h-[600px] mt-12 overflow-hidden group"
+    >
+      <img
+        src="./assets/images/hero/l1.jpg"
+        alt="Students in music class"
+        class="w-full h-full object-cover"
+      />
+
+      <!-- Glass Cards -->
+      <!-- <div
+        class="absolute top-10 right-10 glass-card p-6 rounded-2xl hidden md:flex flex-col gap-2 max-w-xs shadow-2xl animate-fade-in-up"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+          >
+            <iconify-icon
+              icon="solar:music-note-bold"
+              width="24"
+            ></iconify-icon>
+          </div>
+          <span class="text-primary font-bold text-lg">Daily Practice</span>
+        </div>
+        <p class="text-primary/70 text-sm">
+          Consistent engagement fosters discipline and growth.
+        </p>
+      </div>
+
+      <div
+        class="absolute bottom-10 left-10 glass-card p-6 rounded-2xl hidden md:flex flex-col gap-2 max-w-xs shadow-2xl"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+          >
+            <iconify-icon
+              icon="solar:users-group-rounded-bold"
+              width="24"
+            ></iconify-icon>
+          </div>
+          <span class="text-primary font-bold text-lg">Community</span>
+        </div>
+        <p class="text-primary/70 text-sm">
+          Building bonds through harmonious collaboration.
+        </p>
+      </div> -->
+    </div>
+
+    <!-- Quote / Text Break -->
+    <section class="pt-32 pb-12">
+      <div class="max-w-[1060px] mx-auto px-6 text-center">
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              "Music is the universal language of mankind.
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              Where words fail, music speaks. It is the explosive
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              expression of humanity. Integer quis odio et ante
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              fermentum tempor eget vel arcu. Donec fermentum
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              ante et est tempus commodo. Aliquam faucibus metus sit
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="overflow-hidden">
+            <div
+              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
+            >
+              amet dictum pretium. Curabitur ut egestas odio."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="pt-6 pb-24">
+      <div
+        class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+      >
+        <!-- Feature 1 -->
+        <div class="flex flex-col gap-6 group cursor-pointer">
+          <div
+            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
+          >
+            <img
+              src="./assets/images/hero/8.jpg"
+              alt="Community"
+              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
+            ></div>
+            <div class="relative z-10 text-center md:text-left">
+              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
+                Quality Education
+              </h3>
+              <p class="text-xl opacity-80 leading-snug text-white">
+                Providing comprehensive music theory, practical instrument
+                training, and disciplined instruction.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="flex flex-col gap-6 group cursor-pointer">
+          <div
+            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
+          >
+            <img
+              src="./assets/images/hero/12.jpg"
+              alt="Community"
+              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
+            ></div>
+            <div class="relative z-10 text-center md:text-left">
+              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
+                Gender Equality
+              </h3>
+              <p class="text-xl opacity-80 leading-snug text-white">
+                Promoting equal opportunities for all children to pursue music,
+                regardless of gender.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="flex flex-col gap-6 group cursor-pointer">
+          <div
+            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
+          >
+            <img
+              src="./assets/images/hero/11.jpg"
+              alt="Community"
+              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
+            ></div>
+            <div class="relative z-10 text-center md:text-left">
+              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
+                Decent Work and Economic Growth
+              </h3>
+              <p class="text-xl opacity-80 leading-snug text-white">
+                Fostering economic opportunities through music education and
+                performance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Impact Section -->
+    <section class="pb-24 bg-white">
+      <div class="max-w-[1280px] mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          <!-- Left Grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Box 1: Gray Image Placeholder -->
+            <div
+              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
+            >
+              <img
+                src="./assets/images/hero/9.jpg"
+                class="grayscale-[70%] w-full h-full object-cover"
+                alt=""
+              />
+            </div>
+
+            <!-- Box 2: White Text Box -->
+            <div
+              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
+            >
+              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
+              <p class="text-xl leading-tight opacity-80">
+                Providing Comprehensive Music Theory, Practical Instrument
+                Training, And Disciplined.
+              </p>
+            </div>
+
+            <!-- Box 3: White Text Box -->
+            <div
+              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
+            >
+              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
+              <p class="text-xl leading-tight opacity-80">
+                Providing Comprehensive Music Theory, Practical Instrument
+                Training, And Disciplined.
+              </p>
+            </div>
+
+            <!-- Box 4: Gray Image Placeholder -->
+            <div
+              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
+            >
+              <img
+                src="./assets/images/hero/6.jpg"
+                class="grayscale-[70%] w-full h-full object-cover"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <!-- Center Text -->
+          <div class="flex items-center justify-center py-12 lg:py-0">
+            <h2
+              class="text-5xl md:text-7xl font-medium tracking-tight leading-[0.9] text-[#003A2E] text-center"
+            >
+              IMPACT<br />
+              <span class="block mt-2">2025</span>
+            </h2>
+          </div>
+
+          <!-- Right Grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Box 1: Gray Image Placeholder -->
+            <div
+              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
+            >
+              <img
+                src="./assets/images/hero/10.jpg"
+                class="grayscale-[70%] w-full h-full object-cover"
+                alt=""
+              />
+            </div>
+
+            <!-- Box 2: White Text Box -->
+            <div
+              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
+            >
+              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
+              <p class="text-xl leading-tight opacity-80">
+                Providing Comprehensive Music Theory, Practical Instrument
+                Training, And Disciplined.
+              </p>
+            </div>
+
+            <!-- Box 3: White Text Box -->
+            <div
+              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
+            >
+              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
+              <p class="text-xl leading-tight opacity-80">
+                Providing Comprehensive Music Theory, Practical Instrument
+                Training, And Disciplined.
+              </p>
+            </div>
+
+            <!-- Box 4: Gray Image Placeholder -->
+            <div
+              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
+            >
+              <img
+                src="./assets/images/hero/8.jpg"
+                class="grayscale-[70%] w-full h-full object-cover"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Watch Story Section -->
+    <section class="max-w-[1440px] mx-auto px-6 md:px-12 py-20">
+      <div class="flex items-center gap-6 mb-8 cursor-pointer group">
+        <h2
+          class="text-4xl md:text-5xl font-medium tracking-tight text-primary"
+        >
+          Watch our Story
+        </h2>
+        <div
+          class="w-16 h-16 rounded-full border border-primary flex items-center justify-center group-hover:scale-[1.1] transition-all"
+        >
+          <iconify-icon
+            icon="hugeicons:play"
+            width="24"
+            stroke-width="2"
+          ></iconify-icon>
+        </div>
+      </div>
+
+      <div
+        class="w-full h-[500px] md:h-[660px] rounded-[60px] overflow-hidden relative border-4 border-primary/10"
+      >
+        <!-- <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4734259a-bad7-422f-981e-ce01e79184f2_1600w.jpg" alt="Orchestra playing" class="w-full h-full object-cover opacity-90"> -->
+        <video src="./assets/video/bg-video.mp4" class="w-full" muted></video>
+        <div
+          class="absolute inset-0 bg-primary/10 flex items-center justify-center"
+        >
+          <div
+            class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform"
+          >
+            <iconify-icon icon="solar:play-bold" width="40"></iconify-icon>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CTA Section with Orange Accent -->
+    <section class="py-24">
+      <div class="max-w-[1440px] mx-auto px-6">
+        <div
+          class="border-t-[5px] border-gray-300 pt-16 flex flex-col lg:flex-row justify-between gap-16"
+        >
+          <div class="lg:w-1/2">
+            <h2
+              class="font-gill text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.1] mb-8"
+            >
+              Be the
+              <span class="text-[#7f1d1d] italic">Resolving Note</span><br />
+              in the Story.
+            </h2>
+            <p
+              class="font-gilroy text-xl md:text-2xl mb-8 text-[#003A2E]/80 leading-relaxed"
+            >
+              Your contribution buys instruments, books and stationery for
+              students.
+            </p>
+          </div>
+          <!-- Right Buttons -->
+          <!-- <div class="lg:w-1/3 flex flex-col justify-center gap-4">
+              <a
+                href="#"
+                class="w-full bg-[#7f1d1d] text-white text-xl font-medium py-6 px-8 rounded-full flex items-center justify-between hover:bg-[#c9730e] transition-colors group"
+              >
+                <span>Donate Now</span>
+                <iconify-icon
+                  icon="solar:arrow-right-linear"
+                  width="24"
+                  class="transform group-hover:translate-x-1 transition-transform"
+                ></iconify-icon>
+              </a>
+              <a
+                href="#"
+                class="w-full border border-[#003A2E] text-[#003A2E] text-xl font-medium py-6 px-8 rounded-full flex items-center justify-between hover:bg-[#003A2E]/5 transition-colors group"
+              >
+                <span>Volunteer</span>
+                <iconify-icon
+                  icon="solar:arrow-right-linear"
+                  width="24"
+                  class="transform group-hover:translate-x-1 transition-transform"
+                ></iconify-icon>
+              </a>
+            </div> -->
+
+          <!-- Donate Card -->
+          <div class="max-w-[600px] w-full px-2 py-6">
+            <div
+              class="bg-primary rounded-[32px] p-3 md:p-6 pt-0 md:pt-0 shadow-xl border border-gray-100"
+            >
+              <!-- Tabs -->
+              <!-- <div class="flex gap-0 mb-8">
+                <button
+                  class="flex-1 py-4 px-6 border-b-2 border-[#7f1d1d] text-[#7f1d1d] font-semibold text-lg transition-all"
+                >
+                  Give Support
+                </button>
+                <button
+                  class="flex-1 py-4 px-6 bg-white text-gray-700 font-semibold text-lg transition-all"
+                >
+                  Volunteer Skills
+                </button>
+              </div> -->
+
+              <!-- Frequency Toggle -->
+              <!-- <div
+                class="flex gap-3 mb-8 bg-gray-100 p-2 rounded-full w-fit mx-auto"
+              >
+                <button
+                  class="px-8 py-3 rounded-full bg-[#7f1d1d] text-white font-medium transition-all"
+                >
+                  One-time
+                </button>
+                <button
+                  class="px-8 py-3 rounded-full bg-transparent text-gray-600 font-medium hover:text-gray-900 transition-all"
+                >
+                  Monthly
+                </button>
+              </div> -->
+
+              <!-- Donation Tiers -->
+              <!-- <div class="grid grid-cols-3 gap-4 mb-6">
+                <div
+                  class="border-2 border-gray-200 rounded-2xl p-3 flex items-center justify-center text-center hover:border-gray-300 transition-all cursor-pointer"
+                >
+                  <p class="text-2xl font-bold text-[#003A2E] mb-2">₦5k</p>
+                </div>
+                <div
+                  class="bg-[#7f1d1d] rounded-2xl p-3 flex items-center justify-center text-center shadow-lg scale-105 cursor-pointer"
+                >
+                  <p class="text-2xl font-bold text-white mb-2">₦10k</p>
+                </div>
+                <div
+                  class="border-2 border-gray-200 rounded-2xl p-3 flex items-center justify-center text-center hover:border-gray-300 transition-all cursor-pointer"
+                >
+                  <p class="text-2xl font-bold text-[#003A2E] mb-2">₦50k</p>
+                </div>
+              </div> -->
+
+              <!-- Custom Amount -->
+              <!-- <div class="mb-6">
+                <input
+                  type="text"
+                  placeholder="₦ Other Amount"
+                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-[#7f1d1d] focus:outline-none transition-all"
+                />
+              </div> -->
+
+              <!-- CTA Button -->
+              <!-- <button
+                class="w-full bg-[#7f1d1d] text-white text-xl font-semibold py-5 rounded-full hover:bg-[#c9730e] transition-all mb-8 flex items-center justify-center gap-2 shadow-md"
+              >
+                <span>BECOME A SPONSOR</span>
+                <span>→</span>
+              </button> -->
+
+              <!-- Bank Transfer -->
+              <div class="text-center pt-6 border-t border-gray-200">
+                <p
+                  class="text-sm uppercase tracking-wider text-white mb-3 font-semibold"
+                >
+                  Direct Bank Transfer
+                </p>
+                <p class="text-2xl mb-6">
+                  <span class="text-white/70 font-bold"
+                    >The Darko's Music Foundation</span
+                  >
+                </p>
+                <div class="space-y-1">
+                  <p class="text-3xl">
+                    <span
+                      class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70"
+                      >1307767276</span
+                    >
+                    <span class="text-white/80 ml-2">(Naira)</span>
+                  </p>
+                  <p class="text-3xl">
+                    <span
+                      class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70"
+                      >1307768211</span
+                    >
+                    <span class="text-white/80 ml-2">(Dollar)</span>
+                  </p>
+                  <p class="text-xl text-white/80 mt-6">
+                    <span class="text-[#7f1d1d]/70">(</span>Providus Bank<span
+                      class="text-[#7f1d1d]/70"
+                      >)</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Voices Quote -->
+    <section class="py-24 overflow-hidden">
+      <div class="max-w-[1280px] mx-auto px-6">
+        <div class="relative">
+          <h2 class="text-4xl md:text-5xl font-medium mb-12">Voices</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p class="text-2xl md:text-3xl leading-relaxed font-light">
+                "Providing comprehensive music theory, practical instrument
+                training, and disciplined instruction gave me a purpose I didn't
+                know I needed."
+              </p>
+              <div class="mt-8 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p class="font-bold">Sarah Jenkins</p>
+                  <p class="text-sm opacity-60">Alumni, Class of 2021</p>
+                </div>
+              </div>
+            </div>
+            <div class="relative">
+              <div
+                class="absolute -top-12 -left-8 text-9xl font-gill font-bold text-[#003A2E]/5 select-none"
+              >
+                ”
+              </div>
+              <div class="bg-[#F8F9FA] p-8 rounded-[32px]">
+                <p class="text-xl italic opacity-80 mb-6">
+                  "The foundation didn't just teach my son to play the cello;
+                  they taught him patience, collaboration, and how to listen.
+                  Those skills are universal."
+                </p>
+                <p class="font-bold">- Tolu Johnson, Student</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="bg-[#003A2E] text-white relative pt-24 pb-12 rounded-t-[40px] md:rounded-t-[60px] mx-2 md:mx-3"
+    >
+      <div class="max-w-[1280px] mx-auto px-6">
+        <!-- Logo Section -->
+        <div class="mb-20">
+          <h2 class="text-4xl md:text-6xl font-normal tracking-wide uppercase">
+            THE DARKO MUSIC<br />FOUNDATION
+          </h2>
+        </div>
+
+        <!-- Links Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24 border-b border-white/10 pb-12"
+        >
+          <div class="flex flex-col gap-6">
+            <h3 class="text-2xl font-bold mb-2">About Us</h3>
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Our Mission</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Our Story</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >See our Work</a
+            >
+          </div>
+          <div class="flex flex-col gap-6">
+            <h3 class="text-2xl font-bold mb-2">Support</h3>
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Donate</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Volunteer</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Partner with Us</a
+            >
+          </div>
+          <div class="flex flex-col gap-6">
+            <h3 class="text-2xl font-bold mb-2">Contact</h3>
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Instagram</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >Facebook</a
+            >
+            <a
+              href="#"
+              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
+              >LinkedIn</a
+            >
+          </div>
+          <div class="flex flex-col gap-6 justify-end">
+            <img
+              src="./assets/images/logo-white.svg"
+              class="absolute top-24 h-100 -translate-x-6"
+              width="200"
+              alt=""
+            />
+            <a
+              href="#"
+              class="text-lg decoration-white/30 hover:decoration-white transition-all"
+              >+234 703 826 7847
+            </a>
+            <a
+              href="#"
+              class="text-lg underline underline-offset-4 decoration-[#7f1d1d] hover:decoration-white transition-all"
+              >thedarkosmusicfoundation@gmail.com
+            </a>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div
+          class="flex flex-col md:flex-row items-center justify-between gap-6 text-lg opacity-60"
+        >
+          <p>Copyright TDMF 2026</p>
+          <div class="flex gap-8">
+            <p>Non-profit Status</p>
+            <p>Privacy Policy</p>
+          </div>
+          <button
+            onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            class="hover:text-white transition-colors flex items-center gap-2"
+          >
+            Back to top
+            <iconify-icon icon="solar:arrow-up-linear"></iconify-icon>
+          </button>
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        //const lenis = new Lenis();
+
+        lenis.on("scroll", ScrollTrigger.update);
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Initial Setup: Hide the text and push it down
+        gsap.set(".reveal-text", {
+          yPercent: 100,
+          autoAlpha: 0,
+        });
+
+        // ScrollTrigger Text Reveal Animation
+        const revealTexts = document.querySelectorAll(".reveal-text");
+
+        revealTexts.forEach((text, index) => {
+          gsap.to(text, {
+            scrollTrigger: {
+              trigger: text,
+              start: "top 90%",
+              once: true,
+            },
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 1.2,
+            ease: "power4.out",
+            delay: index * 0.1,
+          });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+              lenis.scrollTo(target);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
