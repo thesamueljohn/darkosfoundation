@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,979 +14,463 @@
     <script src="./assets/js/plugins/lenis.min.js"></script>
 
     <style>
-      html {
-        scroll-behavior: auto !important;
-      }
-      body {
-        font-family: "Instrument Sans", sans-serif;
-        color: #003a2e;
-        background-color: #ffffff;
-      }
-      .font-gill {
-        font-family:
-          "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-      }
-      .font-gilroy {
-        font-family:
-          "Instrument Sans", sans-serif; /* Fallback as Gilroy is not standard web font */
-      }
-
-      .bg-primary {
-        background-color: #003a2e;
-      }
-      .text-primary {
-        color: #003a2e;
-      }
-      .border-primary {
-        border-color: #003a2e;
-      }
+      html { scroll-behavior: auto !important; }
+      body { font-family:"Instrument Sans",sans-serif; color:#003a2e; background:#fff; }
+      .font-gill  { font-family:"Gill Sans","Gill Sans MT",Calibri,"Trebuchet MS",sans-serif; }
+      .font-gilroy{ font-family:"Instrument Sans",sans-serif; }
+      .bg-primary  { background-color:#003a2e; }
+      .text-primary{ color:#003a2e; }
+      .border-primary{ border-color:#003a2e; }
       .glass-card {
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(30px);
-        -webkit-backdrop-filter: blur(30px);
-        border: 1px solid rgba(0, 58, 46, 0.1);
+        background:rgba(255,255,255,.5);
+        backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px);
+        border:1px solid rgba(0,58,46,.1);
       }
 
-      /* Custom scrollbar for clean look */
-      /* ::-webkit-scrollbar {
-        width: 8px;
+      /* marquee */
+      @keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+      .animate-scroll{ animation:scroll 140s linear infinite; width:max-content; }
+      .marquee-container:hover .animate-scroll{ animation-play-state:paused; }
+      .marquee-card{ filter:grayscale(.4); transition:transform .5s cubic-bezier(.25,1,.5,1),filter .5s ease; }
+      .marquee-card:hover{ transform:rotate(0deg) scale(1.02) translateY(-20px)!important; z-index:10; filter:grayscale(0); box-shadow:0 20px 25px -5px rgb(0 0 0/.1),0 8px 10px -6px rgb(0 0 0/.1); }
+      .marquee-mask{ mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent); -webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent); }
+
+      /* lenis */
+      html.lenis,html.lenis body{ height:auto; }
+      .lenis.lenis-smooth{ scroll-behavior:auto!important; }
+      .lenis.lenis-smooth [data-lenis-prevent]{ overscroll-behavior:contain; }
+      .lenis.lenis-stopped{ overflow:hidden; }
+      .lenis.lenis-scrolling iframe{ pointer-events:none; }
+
+      /* mobile nav */
+      #mobile-menu{ max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s ease; opacity:0; }
+      #mobile-menu.open{ max-height:400px; opacity:1; }
+
+      /* video */
+      .video-wrapper{ position:relative; }
+      .video-wrapper video{ display:block; width:100%; height:100%; object-fit:cover; }
+      .play-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,58,46,.1); cursor:pointer; transition:background .3s ease; }
+      .play-overlay.hidden-overlay{ background:transparent; pointer-events:none; }
+      .play-btn-circle{ width:6rem; height:6rem; background:rgba(255,255,255,.2); backdrop-filter:blur(8px); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; transition:transform .2s ease,opacity .3s ease; }
+      .play-overlay.hidden-overlay .play-btn-circle{ opacity:0; transform:scale(.8); }
+      .play-btn-circle:hover{ transform:scale(1.1); }
+
+      /* copy toast */
+      #copy-toast{ position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(20px); background:#003a2e; color:#fff; padding:.75rem; padding-right: 1rem; border-radius:9999px; font-size:1rem; font-weight:600; letter-spacing:.01em; box-shadow:0 8px 20px rgba(0,58,46,.35); opacity:0; pointer-events:none; transition:opacity .25s ease,transform .25s ease; z-index:9999; display:flex; align-items:center; gap:.5rem; }
+      #copy-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+      /* copy button */
+      .copy-btn{ display:inline-flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); color:#fff; border-radius:9999px; padding:.3rem .9rem; font-size:.82rem; font-weight:600; letter-spacing:.03em; cursor:pointer; transition:background .2s ease,transform .15s ease; vertical-align:middle; margin-left:.5rem; }
+      .copy-btn:hover{ background:rgba(255,255,255,.22); transform:scale(1.04); }
+      .copy-btn:active{ transform:scale(.97); }
+      .copy-btn.copied{ background:#7f1d1d; border-color:#7f1d1d; }
+
+      /* ── Feature cards — text never overflows, container is flexible ── */
+      .feature-card-inner{
+        position:absolute; inset:0; z-index:10;
+        padding: clamp(1rem, 3.5vw, 2.5rem);
+        display:flex; flex-direction:column; justify-content:flex-start;
       }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+      .feature-card-title{
+        font-size: clamp(1.15rem, 2.2vw, 1.875rem);
+        line-height:1.15; font-weight:400;
+        margin-bottom:.45rem; color:#fff;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #003a2e;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #e29332;
-      } */
-      /* Infinite Scroll Animation */
-      @keyframes scroll {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-50%);
-        }
+      .feature-card-text{
+        font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+        line-height:1.55; color:#fff; opacity:.85;
       }
 
-      .animate-scroll {
-        animation: scroll 140s linear infinite;
-        width: max-content; /* Ensure container fits all items in a single line */
+      /* ── Quote — fluid, never clips ── */
+      .quote-line{
+        display:block;
+        font-size: clamp(1.1rem, 3.2vw, 2.5rem);
+        line-height:1.38; font-weight:400; letter-spacing:-.01em;
       }
 
-      /* Pause animation on hover for accessibility/viewing */
-      .marquee-container:hover .animate-scroll {
-        animation-play-state: paused;
+      /* ── word-break util ── */
+      .break-word{ word-break:break-word; overflow-wrap:anywhere; hyphens:auto; }
+
+      /* ══════════════════════════════════════════
+         PRELOADER
+      ══════════════════════════════════════════ */
+      #preloader{
+        position:fixed; inset:0; z-index:99999;
+        background:#003a2e;
+        display:flex; flex-direction:column;
+        align-items:center; justify-content:center;
+        overflow:hidden;
       }
 
-      /* Card Hover Effects */
-      .marquee-card {
-        filter: grayscale(0.4);
-        transition:
-          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
-          filter 0.5s ease;
-      }
-      .marquee-card:hover {
-        transform: rotate(0deg) scale(1.02) translateY(-20px) !important;
-        z-index: 10;
-        filter: grayscale(0);
-        box-shadow:
-          0 20px 25px -5px rgb(0 0 0 / 0.1),
-          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      /* 5 horizontal staff lines */
+      .staff-line{
+        position:absolute; left:0; height:1px;
+        background:rgba(255,255,255,.14);
+        width:0%; transform-origin:left;
       }
 
-      /* Edge Fading Mask */
-      .marquee-mask {
-        mask-image: linear-gradient(
-          to right,
-          transparent,
-          black 10%,
-          black 90%,
-          transparent
-        );
-        -webkit-mask-image: linear-gradient(
-          to right,
-          transparent,
-          black 10%,
-          black 90%,
-          transparent
-        );
-      }
-      html.lenis,
-      html.lenis body {
-        height: auto;
+      /* giant counter */
+      #pre-counter{
+        font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif;
+        font-size:clamp(6rem,20vw,15rem);
+        font-weight:400; color:#fff;
+        line-height:1; letter-spacing:-.05em;
+        position:relative; z-index:2; opacity:0;
+        user-select:none;
       }
 
-      /* Ensure no native scroll conflicts */
-      .lenis.lenis-smooth {
-        scroll-behavior: auto !important;
+      /* floating music note */
+      #pre-note-wrap{
+        position:absolute; z-index:3;
+        display:flex; flex-direction:column; align-items:flex-start;
       }
+      #pre-note-stem{ width:2px; height:28px; background:#fff; margin-left:9px; opacity:0; }
+      #pre-note{ width:13px; height:10px; background:#fff; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; transform:rotate(-10deg); opacity:0; }
 
-      .lenis.lenis-smooth [data-lenis-prevent] {
-        overscroll-behavior: contain;
+      /* equaliser bars */
+      .pre-bars{
+        display:flex; gap:5px; align-items:flex-end;
+        height:64px; position:absolute; bottom:14%; z-index:2;
       }
+      .pre-bar{ width:4px; border-radius:2px; background:rgba(255,255,255,.55); transform-origin:bottom; }
 
-      .lenis.lenis-stopped {
-        overflow: hidden;
+      /* foundation wordmark */
+      #pre-wordmark{
+        position:absolute; bottom:9%;
+        font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif;
+        font-size:clamp(.7rem,1.4vw,.95rem);
+        letter-spacing:.26em; text-transform:uppercase;
+        color:rgba(255,255,255,.45); z-index:2; overflow:hidden;
       }
+      #pre-wm-inner{ display:block; transform:translateY(110%); }
 
-      /* Fix for iframes blocking scroll on trackpads */
-      .lenis.lenis-scrolling iframe {
-        pointer-events: none;
-      }
+      /* wipe curtain */
+      #pre-curtain{ position:absolute; inset:0; background:#003a2e; z-index:1; transform-origin:bottom; }
+
+      body.preloading{ overflow:hidden; }
     </style>
   </head>
-  <body class="antialiased selection:bg-[#003A2E] selection:text-white">
+
+  <body class="antialiased selection:bg-[#003A2E] selection:text-white preloading">
+
+    <!-- ═══════════════ PRELOADER ═══════════════ -->
+    <div id="preloader" aria-hidden="true">
+
+      <!-- staff lines (positioned via JS) -->
+      <div class="staff-line" id="sl0"></div>
+      <div class="staff-line" id="sl1"></div>
+      <div class="staff-line" id="sl2"></div>
+      <div class="staff-line" id="sl3"></div>
+      <div class="staff-line" id="sl4"></div>
+
+      <!-- floating note -->
+      <div id="pre-note-wrap">
+        <div id="pre-note-stem"></div>
+        <div id="pre-note"></div>
+      </div>
+
+      <!-- counter -->
+      <div id="pre-counter">0</div>
+
+      <!-- equaliser -->
+      <div class="pre-bars">
+        <div class="pre-bar" style="height:22px"></div>
+        <div class="pre-bar" style="height:38px"></div>
+        <div class="pre-bar" style="height:54px"></div>
+        <div class="pre-bar" style="height:32px"></div>
+        <div class="pre-bar" style="height:64px"></div>
+        <div class="pre-bar" style="height:44px"></div>
+        <div class="pre-bar" style="height:28px"></div>
+        <div class="pre-bar" style="height:52px"></div>
+        <div class="pre-bar" style="height:18px"></div>
+        <div class="pre-bar" style="height:42px"></div>
+        <div class="pre-bar" style="height:60px"></div>
+        <div class="pre-bar" style="height:34px"></div>
+      </div>
+
+      <!-- wordmark -->
+      <div id="pre-wordmark"><span id="pre-wm-inner">The Darko's Music Foundation</span></div>
+
+      <!-- wipe curtain -->
+      <div id="pre-curtain"></div>
+    </div>
+    <!-- /PRELOADER -->
+
+    <!-- Copy Toast -->
+    <div id="copy-toast">
+      <iconify-icon icon="solar:check-circle-bold" width="24"></iconify-icon>
+      <span id="copy-toast-msg">Copied!</span>
+    </div>
+
     <!-- Navigation -->
-    <nav
-      class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#003A2E]/10"
-    >
-      <div
-        class="max-w-[1280px] mx-auto px-6 h-24 flex items-center justify-between"
-      >
-        <!-- Left Links -->
-        <div class="hidden md:flex items-center gap-8 text-lg font-normal">
-          <a href="#" class="hover:opacity-70 transition-opacity">Our Story</a>
-          <a href="#" class="hover:opacity-70 transition-opacity">Our Work</a>
-          <a href="#" class="hover:opacity-70 transition-opacity">Voices</a>
-          <a href="#" class="hover:opacity-70 transition-opacity">Contact</a>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#003A2E]/10">
+      <div class="max-w-[1280px] mx-auto px-6 h-24 flex items-center justify-between relative">
+        <div class="hidden lg:flex items-center gap-6 xl:gap-8 text-base xl:text-lg font-normal">
+          <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Our Story</a>
+          <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Our Work</a>
+          <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Voices</a>
+          <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Contact</a>
         </div>
-
-        <!-- Mobile Menu Icon -->
-        <button class="md:hidden text-[#003A2E]">
-          <iconify-icon
-            icon="solar:hamburger-menu-linear"
-            width="32"
-          ></iconify-icon>
+        <button id="mobile-menu-btn" class="lg:hidden text-[#003A2E] z-10" aria-label="Open menu">
+          <iconify-icon icon="solar:hamburger-menu-linear" width="32"></iconify-icon>
         </button>
-
-        <!-- Logo (Center visual anchor, though structurally flexed) -->
-        <div
-          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-        >
-          <img
-            src="./assets/images/logo-green.svg"
-            width="48"
-            height="72"
-            alt="Darko's Music Foundation"
-          />
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <img src="./assets/images/logo-green.svg" width="48" height="72" alt="Darko's Music Foundation" loading="lazy" />
         </div>
-
-        <!-- Right Buttons -->
-        <div class="hidden md:flex items-center gap-4">
-          <a
-            href="#"
-            class="px-6 py-3 rounded-full border border-[#003A2E] text-lg font-bold hover:bg-[#003A2E]/5 transition-colors"
-          >
-            Volunteer
-          </a>
-          <a
-            href="#"
-            class="px-6 py-3 rounded-full bg-[#003A2E] text-white text-lg font-bold flex items-center gap-2 hover:bg-[#7f1d1d] transition-colors"
-          >
-            <span>Donate</span>
-            <iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
+        <div class="hidden lg:flex items-center gap-4">
+          <a href="#" class="px-5 py-3 rounded-full border border-[#003A2E] text-base xl:text-lg font-bold hover:bg-[#003A2E]/5 transition-colors whitespace-nowrap">Volunteer</a>
+          <a href="#" class="px-5 py-3 rounded-full bg-[#003A2E] text-white text-base xl:text-lg font-bold flex items-center gap-2 hover:bg-[#7f1d1d] transition-colors whitespace-nowrap">
+            <span>Donate</span><iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
           </a>
         </div>
-
-        <!-- Mobile Donate Icon -->
-        <a href="#" class="md:hidden text-[#003A2E]">
-          <iconify-icon icon="solar:heart-bold" width="28"></iconify-icon>
-        </a>
+        <a href="#" class="lg:hidden text-[#003A2E] z-10"><iconify-icon icon="solar:heart-bold" width="28"></iconify-icon></a>
+      </div>
+      <div id="mobile-menu" class="lg:hidden bg-white/95 backdrop-blur-md border-t border-[#003A2E]/10 px-6">
+        <div class="flex flex-col py-4 gap-1">
+          <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Our Story</a>
+          <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Our Work</a>
+          <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Voices</a>
+          <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Contact</a>
+          <div class="flex gap-3 pt-4">
+            <a href="#" class="flex-1 text-center px-6 py-3 rounded-full border border-[#003A2E] text-base font-bold hover:bg-[#003A2E]/5 transition-colors">Volunteer</a>
+            <a href="#" class="flex-1 flex items-center justify-center gap-1 px-6 py-3 rounded-full bg-[#003A2E] text-white text-base font-bold hover:bg-[#7f1d1d] transition-colors">
+              Donate <iconify-icon icon="solar:heart-bold" width="18"></iconify-icon>
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="pt-20 pb-12 overflow-hidden">
       <div class="flex flex-col items-center text-center">
-        <!-- Headlines -->
         <div class="max-w-[1280px] px-6 mx-auto">
-          <h1
-            class="font-gill text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8"
-          >
-            TALENT IS UNIVERSAL.<br />
-            <span class="block mt-2">OPPORTUNITY IS NOT.</span>
+          <h1 class="font-gill text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8">
+            TALENT IS UNIVERSAL.<br /><span class="block mt-2">OPPORTUNITY IS NOT.</span>
           </h1>
-
-          <p
-            class="font-gilroy text-xl md:text-2xl text-[#003A2E]/80 max-w-2xl mx-auto mb-12 leading-relaxed"
-          >
-            The Darko's Music Foundation empowers students through the
-            transformative power of music education.
+          <p class="font-gilroy text-xl md:text-2xl text-[#003A2E]/80 max-w-2xl mx-auto mb-12 leading-relaxed">
+            The Darko's Music Foundation empowers students through the transformative power of music education.
           </p>
-
-          <!-- Buttons -->
-          <div
-            class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4"
-          >
-            <a
-              href="#"
-              class="w-full sm:w-auto px-8 py-4 rounded-full border border-[#003A2E] text-lg font-bold hover:bg-[#003A2E]/5 transition-colors text-center"
-            >
-              Volunteer
-            </a>
-            <a
-              href="#"
-              class="w-full sm:w-auto px-8 py-4 rounded-full bg-[#003A2E] text-white text-lg font-bold flex items-center justify-center gap-2 hover:bg-[#7f1d1d] transition-colors"
-            >
-              <span>Donate</span>
-              <iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+            <a href="#" class="w-full sm:w-auto px-8 py-4 rounded-full border border-[#003A2E] text-lg font-bold hover:bg-[#003A2E]/5 transition-colors text-center">Volunteer</a>
+            <a href="#" class="w-full sm:w-auto px-8 py-4 rounded-full bg-[#003A2E] text-white text-lg font-bold flex items-center justify-center gap-2 hover:bg-[#7f1d1d] transition-colors">
+              <span>Donate</span><iconify-icon icon="solar:heart-bold" width="20"></iconify-icon>
             </a>
           </div>
         </div>
-
-        <!-- NEW: Infinite Marquee Section -->
-        <!-- The 'marquee-mask' class adds the fade effect on edges -->
         <div class="w-full relative marquee-mask mt-4">
           <div class="marquee-container overflow-hidden py-12">
-            <!-- The flex container acts as the track -->
             <div class="flex animate-scroll gap-6 md:gap-8 px-6">
-              <!-- ORIGINAL SET OF CARDS (1–28) -->
-              <!-- Card 1 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]">
-                <img src="./assets/images/hero/1.jpg" alt="Photo 1" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 2 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4">
-                <img src="./assets/images/hero/2.jpg" alt="Photo 2" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 3 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]">
-                <img src="./assets/images/hero/3.jpg" alt="Photo 3" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 4 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2">
-                <img src="./assets/images/hero/4.jpg" alt="Photo 4" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 5 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]">
-                <img src="./assets/images/hero/5.jpg" alt="Photo 5" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 6 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3">
-                <img src="./assets/images/hero/6.jpg" alt="Photo 6" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 7 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-5">
-                <img src="./assets/images/hero/7.jpg" alt="Photo 7" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 8 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg]">
-                <img src="./assets/images/hero/8.jpg" alt="Photo 8" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 9 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-2">
-                <img src="./assets/images/hero/9.jpg" alt="Photo 9" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 10 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-4">
-                <img src="./assets/images/hero/10.jpg" alt="Photo 10" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 11 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-1">
-                <img src="./assets/images/hero/11.jpg" alt="Photo 11" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 12 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]">
-                <img src="./assets/images/hero/12.jpg" alt="Photo 12" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 13 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-3">
-                <img src="./assets/images/hero/13.jpg" alt="Photo 13" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 14 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-5">
-                <img src="./assets/images/hero/14.jpg" alt="Photo 14" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 15 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]">
-                <img src="./assets/images/hero/15.jpg" alt="Photo 15" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 16 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-2">
-                <img src="./assets/images/hero/16.jpg" alt="Photo 16" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 17 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-4">
-                <img src="./assets/images/hero/17.jpg" alt="Photo 17" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 18 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]">
-                <img src="./assets/images/hero/18.jpg" alt="Photo 18" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 19 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-3">
-                <img src="./assets/images/hero/19.jpg" alt="Photo 19" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 20 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-1">
-                <img src="./assets/images/hero/20.jpg" alt="Photo 20" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 21 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-5">
-                <img src="./assets/images/hero/21.jpg" alt="Photo 21" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 22 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-2">
-                <img src="./assets/images/hero/22.jpg" alt="Photo 22" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 23 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]">
-                <img src="./assets/images/hero/23.jpg" alt="Photo 23" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 24 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-4">
-                <img src="./assets/images/hero/24.jpg" alt="Photo 24" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 25 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-3">
-                <img src="./assets/images/hero/25.jpg" alt="Photo 25" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 26 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg]">
-                <img src="./assets/images/hero/26.jpg" alt="Photo 26" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 27 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-2">
-                <img src="./assets/images/hero/27.jpg" alt="Photo 27" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 28 -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-5">
-                <img src="./assets/images/hero/28.jpg" alt="Photo 28" class="w-full h-full object-cover" />
-              </div>
-
-              <!-- DUPLICATE SET FOR INFINITE LOOP (Must match exactly) -->
-              <!-- Card 1 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]">
-                <img src="./assets/images/hero/1.jpg" alt="Photo 1" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 2 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4">
-                <img src="./assets/images/hero/2.jpg" alt="Photo 2" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 3 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]">
-                <img src="./assets/images/hero/3.jpg" alt="Photo 3" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 4 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2">
-                <img src="./assets/images/hero/4.jpg" alt="Photo 4" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 5 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]">
-                <img src="./assets/images/hero/5.jpg" alt="Photo 5" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 6 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3">
-                <img src="./assets/images/hero/6.jpg" alt="Photo 6" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 7 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-5">
-                <img src="./assets/images/hero/7.jpg" alt="Photo 7" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 8 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg]">
-                <img src="./assets/images/hero/8.jpg" alt="Photo 8" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 9 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-2">
-                <img src="./assets/images/hero/9.jpg" alt="Photo 9" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 10 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-4">
-                <img src="./assets/images/hero/10.jpg" alt="Photo 10" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 11 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-1">
-                <img src="./assets/images/hero/11.jpg" alt="Photo 11" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 12 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]">
-                <img src="./assets/images/hero/12.jpg" alt="Photo 12" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 13 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-3">
-                <img src="./assets/images/hero/13.jpg" alt="Photo 13" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 14 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-5">
-                <img src="./assets/images/hero/14.jpg" alt="Photo 14" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 15 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]">
-                <img src="./assets/images/hero/15.jpg" alt="Photo 15" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 16 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-2">
-                <img src="./assets/images/hero/16.jpg" alt="Photo 16" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 17 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-4">
-                <img src="./assets/images/hero/17.jpg" alt="Photo 17" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 18 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]">
-                <img src="./assets/images/hero/18.jpg" alt="Photo 18" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 19 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-3">
-                <img src="./assets/images/hero/19.jpg" alt="Photo 19" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 20 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-1">
-                <img src="./assets/images/hero/20.jpg" alt="Photo 20" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 21 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-5">
-                <img src="./assets/images/hero/21.jpg" alt="Photo 21" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 22 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-2">
-                <img src="./assets/images/hero/22.jpg" alt="Photo 22" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 23 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]">
-                <img src="./assets/images/hero/23.jpg" alt="Photo 23" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 24 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-4">
-                <img src="./assets/images/hero/24.jpg" alt="Photo 24" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 25 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-3">
-                <img src="./assets/images/hero/25.jpg" alt="Photo 25" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 26 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg]">
-                <img src="./assets/images/hero/26.jpg" alt="Photo 26" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 27 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-2">
-                <img src="./assets/images/hero/27.jpg" alt="Photo 27" class="w-full h-full object-cover" />
-              </div>
-              <!-- Card 28 Duplicate -->
-              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-5">
-                <img src="./assets/images/hero/28.jpg" alt="Photo 28" class="w-full h-full object-cover" />
-              </div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"><img src="./assets/images/hero/1.jpg" alt="Photo 1" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4"><img src="./assets/images/hero/2.jpg" alt="Photo 2" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"><img src="./assets/images/hero/3.jpg" alt="Photo 3" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2"><img src="./assets/images/hero/4.jpg" alt="Photo 4" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]"><img src="./assets/images/hero/5.jpg" alt="Photo 5" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"><img src="./assets/images/hero/6.jpg" alt="Photo 6" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-5"><img src="./assets/images/hero/7.jpg" alt="Photo 7" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg]"><img src="./assets/images/hero/8.jpg" alt="Photo 8" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-2"><img src="./assets/images/hero/9.jpg" alt="Photo 9" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-4"><img src="./assets/images/hero/10.jpg" alt="Photo 10" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-1"><img src="./assets/images/hero/11.jpg" alt="Photo 11" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]"><img src="./assets/images/hero/12.jpg" alt="Photo 12" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-3"><img src="./assets/images/hero/13.jpg" alt="Photo 13" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-5"><img src="./assets/images/hero/14.jpg" alt="Photo 14" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"><img src="./assets/images/hero/15.jpg" alt="Photo 15" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-2"><img src="./assets/images/hero/16.jpg" alt="Photo 16" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-4"><img src="./assets/images/hero/17.jpg" alt="Photo 17" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]"><img src="./assets/images/hero/18.jpg" alt="Photo 18" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-3"><img src="./assets/images/hero/19.jpg" alt="Photo 19" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-1"><img src="./assets/images/hero/20.jpg" alt="Photo 20" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-5"><img src="./assets/images/hero/21.jpg" alt="Photo 21" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-2"><img src="./assets/images/hero/22.jpg" alt="Photo 22" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"><img src="./assets/images/hero/23.jpg" alt="Photo 23" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-4"><img src="./assets/images/hero/24.jpg" alt="Photo 24" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-3"><img src="./assets/images/hero/16.jpg" alt="Photo 25" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg]"><img src="./assets/images/hero/26.jpg" alt="Photo 26" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-2"><img src="./assets/images/hero/27.jpg" alt="Photo 27" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-5"><img src="./assets/images/hero/28.jpeg" alt="Photo 28" loading="lazy" class="w-full h-full object-cover" /></div>
+              <!-- duplicates -->
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"><img src="./assets/images/hero/1.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-4"><img src="./assets/images/hero/2.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"><img src="./assets/images/hero/3.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-2"><img src="./assets/images/hero/4.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg]"><img src="./assets/images/hero/5.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-3"><img src="./assets/images/hero/6.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-5"><img src="./assets/images/hero/7.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg]"><img src="./assets/images/hero/8.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-2"><img src="./assets/images/hero/9.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-4"><img src="./assets/images/hero/10.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-1"><img src="./assets/images/hero/11.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]"><img src="./assets/images/hero/12.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-3"><img src="./assets/images/hero/13.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-5"><img src="./assets/images/hero/14.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg]"><img src="./assets/images/hero/15.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-2"><img src="./assets/images/hero/16.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg] translate-y-4"><img src="./assets/images/hero/17.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg]"><img src="./assets/images/hero/18.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-3"><img src="./assets/images/hero/19.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg] translate-y-1"><img src="./assets/images/hero/20.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-5"><img src="./assets/images/hero/21.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-2"><img src="./assets/images/hero/22.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-2deg]"><img src="./assets/images/hero/23.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[3deg] translate-y-4"><img src="./assets/images/hero/24.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-1deg] translate-y-3"><img src="./assets/images/hero/16.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[2deg]"><img src="./assets/images/hero/26.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[-3deg] translate-y-2"><img src="./assets/images/hero/27.jpg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
+              <div class="marquee-card w-[260px] md:w-[320px] aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-lg flex-shrink-0 rotate-[1deg] translate-y-5"><img src="./assets/images/hero/28.jpeg" alt="" loading="lazy" class="w-full h-full object-cover" /></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Mission Text Section -->
+    <!-- Mission -->
     <section class="pt-24 pb-6">
-      <div
-        class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start"
-      >
+      <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
         <div class="lg:col-span-4">
-          <h2
-            class="text-4xl md:text-5xl font-medium tracking-tight leading-tight"
-          >
-            Bridging the<br />Sonic Gap.
-          </h2>
+          <h2 class="text-4xl md:text-5xl font-medium tracking-tight leading-tight">Bridging the<br />Sonic Gap.</h2>
         </div>
         <div class="lg:col-span-8">
-          <p
-            class="text-xl md:text-2xl font-gilroy text-[#003A2E]/80 leading-relaxed"
-          >
-            We don't just teach music; we build character. By replacing idle
-            time with disciplined practice, we transform the trajectory of
-            public school students through the power of creative education.
+          <p class="text-xl md:text-2xl font-gilroy text-[#003A2E]/80 leading-relaxed">
+            We don't just teach music; we build character. By replacing idle time with disciplined practice, we transform the trajectory of public school students through the power of creative education.
           </p>
         </div>
       </div>
     </section>
-    <!-- Large Image with Overlays -->
-    <div
-      class="relative w-full h-[500px] md:h-[600px] mt-12 overflow-hidden group"
-    >
-      <img
-        src="./assets/images/hero/l1.jpg"
-        alt="Students in music class"
-        class="w-full h-full object-cover"
-      />
 
-      <!-- Glass Cards -->
-      <!-- <div
-        class="absolute top-10 right-10 glass-card p-6 rounded-2xl hidden md:flex flex-col gap-2 max-w-xs shadow-2xl animate-fade-in-up"
-      >
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
-          >
-            <iconify-icon
-              icon="solar:music-note-bold"
-              width="24"
-            ></iconify-icon>
-          </div>
-          <span class="text-primary font-bold text-lg">Daily Practice</span>
-        </div>
-        <p class="text-primary/70 text-sm">
-          Consistent engagement fosters discipline and growth.
-        </p>
-      </div>
-
-      <div
-        class="absolute bottom-10 left-10 glass-card p-6 rounded-2xl hidden md:flex flex-col gap-2 max-w-xs shadow-2xl"
-      >
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
-          >
-            <iconify-icon
-              icon="solar:users-group-rounded-bold"
-              width="24"
-            ></iconify-icon>
-          </div>
-          <span class="text-primary font-bold text-lg">Community</span>
-        </div>
-        <p class="text-primary/70 text-sm">
-          Building bonds through harmonious collaboration.
-        </p>
-      </div> -->
+    <!-- Large Image -->
+    <div class="relative w-full h-[500px] md:h-[600px] mt-12 overflow-hidden">
+      <img src="./assets/images/hero/l1.jpg" alt="Students in music class" loading="lazy" decoding="async" class="w-full h-full object-cover" />
     </div>
 
-    <!-- Quote / Text Break -->
+    <!-- Quote — fully fluid, no overflow on any size -->
     <section class="pt-32 pb-12">
       <div class="max-w-[1060px] mx-auto px-6 text-center">
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              "Music is the universal language of mankind.
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              Where words fail, music speaks. It is the explosive
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              expression of humanity. Integer quis odio et ante
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              fermentum tempor eget vel arcu. Donec fermentum
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              ante et est tempus commodo. Aliquam faucibus metus sit
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <div class="overflow-hidden">
-            <div
-              class="reveal-text text-2xl md:text-[40px] leading-tight font-normal tracking-tight"
-            >
-              amet dictum pretium. Curabitur ut egestas odio."
-            </div>
-          </div>
-        </div>
+        <div class="overflow-hidden mb-1"><span class="reveal-text quote-line">"Music is the universal language of mankind.</span></div>
+        <div class="overflow-hidden mb-1"><span class="reveal-text quote-line">Where words fail, music speaks. It is the explosive</span></div>
+        <div class="overflow-hidden mb-1"><span class="reveal-text quote-line">expression of humanity. Integer quis odio et ante</span></div>
+        <div class="overflow-hidden mb-1"><span class="reveal-text quote-line">fermentum tempor eget vel arcu. Donec fermentum</span></div>
+        <div class="overflow-hidden mb-1"><span class="reveal-text quote-line">ante et est tempus commodo. Aliquam faucibus metus sit</span></div>
+        <div class="overflow-hidden"><span class="reveal-text quote-line">amet dictum pretium. Curabitur ut egestas odio."</span></div>
       </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features — flexible container, proper readable text -->
     <section class="pt-6 pb-24">
-      <div
-        class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        <!-- Feature 1 -->
-        <div class="flex flex-col gap-6 group cursor-pointer">
-          <div
-            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
-          >
-            <img
-              src="./assets/images/hero/8.jpg"
-              alt="Community"
-              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
-            ></div>
-            <div class="relative z-10 text-center md:text-left">
-              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
-                Quality Education
-              </h3>
-              <p class="text-xl opacity-80 leading-snug text-white">
-                Providing comprehensive music theory, practical instrument
-                training, and disciplined instruction.
-              </p>
+      <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <div class="group cursor-pointer">
+          <div class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300">
+            <img src="./assets/images/hero/8.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/75 to-transparent"></div>
+            <div class="feature-card-inner">
+              <h3 class="feature-card-title">Quality Education</h3>
+              <p class="feature-card-text">Providing comprehensive music theory, practical instrument training, and disciplined instruction.</p>
             </div>
           </div>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="flex flex-col gap-6 group cursor-pointer">
-          <div
-            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
-          >
-            <img
-              src="./assets/images/hero/12.jpg"
-              alt="Community"
-              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
-            ></div>
-            <div class="relative z-10 text-center md:text-left">
-              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
-                Gender Equality
-              </h3>
-              <p class="text-xl opacity-80 leading-snug text-white">
-                Promoting equal opportunities for all children to pursue music,
-                regardless of gender.
-              </p>
+        <div class="group cursor-pointer">
+          <div class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300">
+            <img src="./assets/images/hero/12.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/75 to-transparent"></div>
+            <div class="feature-card-inner">
+              <h3 class="feature-card-title">Gender Equality</h3>
+              <p class="feature-card-text">Promoting equal opportunities for all children to pursue music, regardless of gender.</p>
             </div>
           </div>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="flex flex-col gap-6 group cursor-pointer">
-          <div
-            class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300 py-12 px-6"
-          >
-            <img
-              src="./assets/images/hero/11.jpg"
-              alt="Community"
-              class="w-full h-full inset-0 absolute object-cover transform group-hover:scale-105 transition-transform duration-700"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/80 to-transparent pointer-events-none"
-            ></div>
-            <div class="relative z-10 text-center md:text-left">
-              <h3 class="text-3xl font-normal tracking-tight mb-2 text-white">
-                Decent Work and Economic Growth
-              </h3>
-              <p class="text-xl opacity-80 leading-snug text-white">
-                Fostering economic opportunities through music education and
-                performance.
-              </p>
+        <div class="group cursor-pointer">
+          <div class="w-full aspect-square relative rounded-[32px] border-2 border-gray-300 overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300">
+            <img src="./assets/images/hero/11.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-b from-[#003A2E] via-[#003A2E]/75 to-transparent"></div>
+            <div class="feature-card-inner">
+              <h3 class="feature-card-title">Decent Work &amp;<br />Economic Growth</h3>
+              <p class="feature-card-text">Fostering economic opportunities through music education and performance.</p>
             </div>
           </div>
         </div>
+
       </div>
     </section>
-    <!-- Impact Section -->
+
+    <!-- Impact — hyphens on text boxes -->
     <section class="pb-24 bg-white">
       <div class="max-w-[1280px] mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-          <!-- Left Grid -->
           <div class="grid grid-cols-2 gap-4">
-            <!-- Box 1: Gray Image Placeholder -->
-            <div
-              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
-            >
-              <img
-                src="./assets/images/hero/9.jpg"
-                class="grayscale-[70%] w-full h-full object-cover"
-                alt=""
-              />
-            </div>
-
-            <!-- Box 2: White Text Box -->
-            <div
-              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
-            >
-              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
-              <p class="text-xl leading-tight opacity-80">
-                Providing Comprehensive Music Theory, Practical Instrument
-                Training, And Disciplined.
-              </p>
-            </div>
-
-            <!-- Box 3: White Text Box -->
-            <div
-              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
-            >
-              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
-              <p class="text-xl leading-tight opacity-80">
-                Providing Comprehensive Music Theory, Practical Instrument
-                Training, And Disciplined.
-              </p>
-            </div>
-
-            <!-- Box 4: Gray Image Placeholder -->
-            <div
-              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
-            >
-              <img
-                src="./assets/images/hero/6.jpg"
-                class="grayscale-[70%] w-full h-full object-cover"
-                alt=""
-              />
-            </div>
+            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/9.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
+            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
+            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
+            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/6.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
           </div>
-
-          <!-- Center Text -->
           <div class="flex items-center justify-center py-12 lg:py-0">
-            <h2
-              class="text-5xl md:text-7xl font-medium tracking-tight leading-[0.9] text-[#003A2E] text-center"
-            >
-              IMPACT<br />
-              <span class="block mt-2">2025</span>
-            </h2>
+            <h2 class="text-5xl md:text-7xl font-medium tracking-tight leading-[0.9] text-[#003A2E] text-center">IMPACT<br /><span class="block mt-2">2025</span></h2>
           </div>
-
-          <!-- Right Grid -->
           <div class="grid grid-cols-2 gap-4">
-            <!-- Box 1: Gray Image Placeholder -->
-            <div
-              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
-            >
-              <img
-                src="./assets/images/hero/10.jpg"
-                class="grayscale-[70%] w-full h-full object-cover"
-                alt=""
-              />
-            </div>
-
-            <!-- Box 2: White Text Box -->
-            <div
-              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
-            >
-              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
-              <p class="text-xl leading-tight opacity-80">
-                Providing Comprehensive Music Theory, Practical Instrument
-                Training, And Disciplined.
-              </p>
-            </div>
-
-            <!-- Box 3: White Text Box -->
-            <div
-              class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-6 shadow-sm flex flex-col justify-between"
-            >
-              <!-- <h4 class="text-3xl font-bold font-gill text-[#003A2E]">80%</h4> -->
-              <p class="text-xl leading-tight opacity-80">
-                Providing Comprehensive Music Theory, Practical Instrument
-                Training, And Disciplined.
-              </p>
-            </div>
-
-            <!-- Box 4: Gray Image Placeholder -->
-            <div
-              class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"
-            >
-              <img
-                src="./assets/images/hero/8.jpg"
-                class="grayscale-[70%] w-full h-full object-cover"
-                alt=""
-              />
-            </div>
+            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/10.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
+            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
+            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
+            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/9.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Watch Story Section -->
+    <!-- Watch Story -->
     <section class="max-w-[1440px] mx-auto px-6 md:px-12 py-20">
-      <div class="flex items-center gap-6 mb-8 cursor-pointer group">
-        <h2
-          class="text-4xl md:text-5xl font-medium tracking-tight text-primary"
-        >
-          Watch our Story
-        </h2>
-        <div
-          class="w-16 h-16 rounded-full border border-primary flex items-center justify-center group-hover:scale-[1.1] transition-all"
-        >
-          <iconify-icon
-            icon="hugeicons:play"
-            width="24"
-            stroke-width="2"
-          ></iconify-icon>
+      <div class="flex items-center gap-6 mb-8 cursor-pointer group" onclick="handleVideoPlayToggle()">
+        <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-primary">Watch our Story</h2>
+        <div class="w-16 h-16 rounded-full border border-primary flex items-center justify-center group-hover:scale-[1.1] transition-all">
+          <iconify-icon icon="hugeicons:play" width="24" stroke-width="2"></iconify-icon>
         </div>
       </div>
-
-      <div
-        class="w-full h-[500px] md:h-[660px] rounded-[60px] overflow-hidden relative border-4 border-primary/10"
-      >
-        <!-- <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4734259a-bad7-422f-981e-ce01e79184f2_1600w.jpg" alt="Orchestra playing" class="w-full h-full object-cover opacity-90"> -->
-        <video src="./assets/video/bg-video.mp4" class="w-full" muted></video>
-        <div
-          class="absolute inset-0 bg-primary/10 flex items-center justify-center"
-        >
-          <div
-            class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform"
-          >
-            <iconify-icon icon="solar:play-bold" width="40"></iconify-icon>
-          </div>
+      <div class="w-full h-[500px] md:h-[660px] rounded-[60px] overflow-hidden relative border-4 border-primary/10 video-wrapper" onclick="handleVideoPlayToggle()">
+        <video id="story-video" src="./assets/video/bg-video.mp4" class="sm:w-full h-full object-cover" preload="metadata" playsinline muted></video>
+        <div id="video-overlay" class="play-overlay">
+          <div class="play-btn-circle"><iconify-icon icon="solar:play-bold" width="40"></iconify-icon></div>
         </div>
       </div>
     </section>
-    <!-- CTA Section with Orange Accent -->
+
+    <!-- CTA / Donate -->
     <section class="py-24">
       <div class="max-w-[1440px] mx-auto px-6">
-        <div
-          class="border-t-[5px] border-gray-300 pt-16 flex flex-col lg:flex-row justify-between gap-16"
-        >
+        <div class="border-t-[5px] border-gray-300 pt-16 flex flex-col lg:flex-row justify-between gap-2 lg:gap-16 ">
           <div class="lg:w-1/2">
-            <h2
-              class="font-gill text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.1] mb-8"
-            >
-              Be the
-              <span class="text-[#7f1d1d] italic">Resolving Note</span><br />
-              in the Story.
+            <h2 class="font-gill text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.1] mb-8">
+              Be the <span class="text-[#7f1d1d] italic">Resolving Note</span><br />in the Story.
             </h2>
-            <p
-              class="font-gilroy text-xl md:text-2xl mb-8 text-[#003A2E]/80 leading-relaxed"
-            >
-              Your contribution buys instruments, books and stationery for
-              students.
+            <p class="font-gilroy text-xl md:text-2xl mb-8 text-[#003A2E]/80 leading-relaxed">
+              Your contribution buys instruments, books and stationery for students.
             </p>
           </div>
-          <!-- Right Buttons -->
-          <!-- <div class="lg:w-1/3 flex flex-col justify-center gap-4">
-              <a
-                href="#"
-                class="w-full bg-[#7f1d1d] text-white text-xl font-medium py-6 px-8 rounded-full flex items-center justify-between hover:bg-[#c9730e] transition-colors group"
-              >
-                <span>Donate Now</span>
-                <iconify-icon
-                  icon="solar:arrow-right-linear"
-                  width="24"
-                  class="transform group-hover:translate-x-1 transition-transform"
-                ></iconify-icon>
-              </a>
-              <a
-                href="#"
-                class="w-full border border-[#003A2E] text-[#003A2E] text-xl font-medium py-6 px-8 rounded-full flex items-center justify-between hover:bg-[#003A2E]/5 transition-colors group"
-              >
-                <span>Volunteer</span>
-                <iconify-icon
-                  icon="solar:arrow-right-linear"
-                  width="24"
-                  class="transform group-hover:translate-x-1 transition-transform"
-                ></iconify-icon>
-              </a>
-            </div> -->
-
-          <!-- Donate Card -->
-          <div class="max-w-[600px] w-full px-2 py-6">
-            <div
-              class="bg-primary rounded-[32px] p-3 md:p-6 pt-0 md:pt-0 shadow-xl border border-gray-100"
-            >
-              <!-- Tabs -->
-              <!-- <div class="flex gap-0 mb-8">
-                <button
-                  class="flex-1 py-4 px-6 border-b-2 border-[#7f1d1d] text-[#7f1d1d] font-semibold text-lg transition-all"
-                >
-                  Give Support
-                </button>
-                <button
-                  class="flex-1 py-4 px-6 bg-white text-gray-700 font-semibold text-lg transition-all"
-                >
-                  Volunteer Skills
-                </button>
-              </div> -->
-
-              <!-- Frequency Toggle -->
-              <!-- <div
-                class="flex gap-3 mb-8 bg-gray-100 p-2 rounded-full w-fit mx-auto"
-              >
-                <button
-                  class="px-8 py-3 rounded-full bg-[#7f1d1d] text-white font-medium transition-all"
-                >
-                  One-time
-                </button>
-                <button
-                  class="px-8 py-3 rounded-full bg-transparent text-gray-600 font-medium hover:text-gray-900 transition-all"
-                >
-                  Monthly
-                </button>
-              </div> -->
-
-              <!-- Donation Tiers -->
-              <!-- <div class="grid grid-cols-3 gap-4 mb-6">
-                <div
-                  class="border-2 border-gray-200 rounded-2xl p-3 flex items-center justify-center text-center hover:border-gray-300 transition-all cursor-pointer"
-                >
-                  <p class="text-2xl font-bold text-[#003A2E] mb-2">₦5k</p>
-                </div>
-                <div
-                  class="bg-[#7f1d1d] rounded-2xl p-3 flex items-center justify-center text-center shadow-lg scale-105 cursor-pointer"
-                >
-                  <p class="text-2xl font-bold text-white mb-2">₦10k</p>
-                </div>
-                <div
-                  class="border-2 border-gray-200 rounded-2xl p-3 flex items-center justify-center text-center hover:border-gray-300 transition-all cursor-pointer"
-                >
-                  <p class="text-2xl font-bold text-[#003A2E] mb-2">₦50k</p>
-                </div>
-              </div> -->
-
-              <!-- Custom Amount -->
-              <!-- <div class="mb-6">
-                <input
-                  type="text"
-                  placeholder="₦ Other Amount"
-                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-[#7f1d1d] focus:outline-none transition-all"
-                />
-              </div> -->
-
-              <!-- CTA Button -->
-              <!-- <button
-                class="w-full bg-[#7f1d1d] text-white text-xl font-semibold py-5 rounded-full hover:bg-[#c9730e] transition-all mb-8 flex items-center justify-center gap-2 shadow-md"
-              >
-                <span>BECOME A SPONSOR</span>
-                <span>→</span>
-              </button> -->
-
-              <!-- Bank Transfer -->
-              <div class="text-center pt-6 border-t border-gray-200">
-                <p
-                  class="text-sm uppercase tracking-wider text-white mb-3 font-semibold"
-                >
-                  Direct Bank Transfer
-                </p>
-                <p class="text-2xl mb-6">
-                  <span class="text-white/70 font-bold"
-                    >The Darko's Music Foundation</span
-                  >
-                </p>
-                <div class="space-y-1">
-                  <p class="text-3xl">
-                    <span
-                      class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70"
-                      >1307767276</span
-                    >
-                    <span class="text-white/80 ml-2">(Naira)</span>
-                  </p>
-                  <p class="text-3xl">
-                    <span
-                      class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70"
-                      >1307768211</span
-                    >
-                    <span class="text-white/80 ml-2">(Dollar)</span>
-                  </p>
-                  <p class="text-xl text-white/80 mt-6">
-                    <span class="text-[#7f1d1d]/70">(</span>Providus Bank<span
-                      class="text-[#7f1d1d]/70"
-                      >)</span
-                    >
-                  </p>
+          <div class="lg:max-w-[600px] w-full px-2 py-6">
+            <div class="bg-primary rounded-[32px] p-3 md:p-6 pt-0 md:pt-0 shadow-xl border border-gray-100">
+              <div class="text-center pt-6 border-t border-white/20">
+                <p class="text-sm uppercase tracking-wider text-white mb-3 font-semibold">Direct Bank Transfer</p>
+                <p class="text-2xl mb-6"><span class="text-white/70 font-bold">The Darko's Music Foundation</span></p>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-center flex-wrap gap-2">
+                    <p class="text-3xl">
+                      <span class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70">1307767276</span>
+                      <span class="text-white/80 ml-2">(Naira)</span>
+                    </p>
+                    <button class="copy-btn" onclick="copyAccount('1307767276',this)" aria-label="Copy Naira account number">
+                      <iconify-icon icon="solar:copy-linear" width="14"></iconify-icon> Copy
+                    </button>
+                  </div>
+                  <div class="flex items-center justify-center flex-wrap gap-2">
+                    <p class="text-3xl">
+                      <span class="font-semibold text-white/90 underline underline-offset-4 decoration-[#7f1d1d]/70">1307768211</span>
+                      <span class="text-white/80 ml-2">(Dollar)</span>
+                    </p>
+                    <button class="copy-btn" onclick="copyAccount('1307768211',this)" aria-label="Copy Dollar account number">
+                      <iconify-icon icon="solar:copy-linear" width="14"></iconify-icon> Copy
+                    </button>
+                  </div>
+                  <p class="text-xl text-white/80 mt-6"><span class="text-[#7f1d1d]/70">(</span>Providus Bank<span class="text-[#7f1d1d]/70">)</span></p>
                 </div>
               </div>
             </div>
@@ -994,7 +479,7 @@
       </div>
     </section>
 
-    <!-- Voices Quote -->
+    <!-- Voices -->
     <section class="py-24 overflow-hidden">
       <div class="max-w-[1280px] mx-auto px-6">
         <div class="relative">
@@ -1002,35 +487,22 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <p class="text-2xl md:text-3xl leading-relaxed font-light">
-                "Providing comprehensive music theory, practical instrument
-                training, and disciplined instruction gave me a purpose I didn't
-                know I needed."
+                "Providing comprehensive music theory, practical instrument training, and disciplined instruction gave me a purpose I didn't know I needed."
               </p>
               <div class="mt-8 flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                  />
+                  <img src="" loading="lazy" class="w-full h-full object-cover" alt=" " />
                 </div>
                 <div>
-                  <p class="font-bold">Sarah Jenkins</p>
-                  <p class="text-sm opacity-60">Alumni, Class of 2021</p>
+                  <p class="font-bold">Rachael</p>
+                  <p class="text-sm opacity-60">Mushin Grammar School</p>
                 </div>
               </div>
             </div>
             <div class="relative">
-              <div
-                class="absolute -top-12 -left-8 text-9xl font-gill font-bold text-[#003A2E]/5 select-none"
-              >
-                ”
-              </div>
+              <div class="absolute -top-12 -left-8 text-9xl font-gill font-bold text-[#003A2E]/5 select-none">&rdquo;</div>
               <div class="bg-[#F8F9FA] p-8 rounded-[32px]">
-                <p class="text-xl italic opacity-80 mb-6">
-                  "The foundation didn't just teach my son to play the cello;
-                  they taught him patience, collaboration, and how to listen.
-                  Those skills are universal."
-                </p>
+                <p class="text-xl italic opacity-80 mb-6">"The foundation didn't just teach my son to play the cello; they taught him patience, collaboration, and how to listen. Those skills are universal."</p>
                 <p class="font-bold">- Tolu Johnson, Student</p>
               </div>
             </div>
@@ -1040,164 +512,270 @@
     </section>
 
     <!-- Footer -->
-    <footer
-      class="bg-[#003A2E] text-white relative pt-24 pb-12 rounded-t-[40px] md:rounded-t-[60px] mx-2 md:mx-3"
-    >
+    <footer class="bg-[#003A2E] text-white relative pt-24 pb-12 rounded-t-[40px] md:rounded-t-[60px] mx-2 md:mx-3">
       <div class="max-w-[1280px] mx-auto px-6">
-        <!-- Logo Section -->
         <div class="mb-20">
-          <h2 class="text-4xl md:text-6xl font-normal tracking-wide uppercase">
-            THE Darko's Music<br />FOUNDATION
-          </h2>
+          <h2 class="text-4xl md:text-6xl font-normal tracking-wide uppercase">THE Darko's Music<br />FOUNDATION</h2>
         </div>
-
-        <!-- Links Grid -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24 border-b border-white/10 pb-12"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24 border-b border-white/10 pb-12">
           <div class="flex flex-col gap-6">
             <h3 class="text-2xl font-bold mb-2">About Us</h3>
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Our Mission</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Our Story</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >See our Work</a
-            >
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Our Mission</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Our Story</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">See our Work</a>
           </div>
           <div class="flex flex-col gap-6">
             <h3 class="text-2xl font-bold mb-2">Support</h3>
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Donate</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Volunteer</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Partner with Us</a
-            >
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Donate</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Volunteer</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Partner with Us</a>
           </div>
           <div class="flex flex-col gap-6">
             <h3 class="text-2xl font-bold mb-2">Contact</h3>
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Instagram</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >Facebook</a
-            >
-            <a
-              href="#"
-              class="text-xl opacity-80 hover:opacity-100 transition-opacity"
-              >LinkedIn</a
-            >
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Instagram</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">Facebook</a>
+            <a href="#" class="text-xl opacity-80 hover:opacity-100 transition-opacity">LinkedIn</a>
           </div>
           <div class="flex flex-col gap-6 justify-end">
-            <img
-              src="./assets/images/logo-white.svg"
-              class="absolute top-24 h-100 -translate-x-6"
-              width="200"
-              alt=""
-            />
-            <a
-              href="#"
-              class="text-lg decoration-white/30 hover:decoration-white transition-all"
-              >+234 703 826 7847
-            </a>
-            <a
-              href="#"
-              class="text-lg underline underline-offset-4 decoration-[#7f1d1d] hover:decoration-white transition-all"
-              >thedarkosmusicfoundation@gmail.com
+            <img src="./assets/images/logo-white.svg" class="w-20 md:w-28 mb-2" alt="Darko's Music Foundation logo" loading="lazy" />
+            <a href="tel:+2347038267847" class="text-lg">+234 703 826 7847</a>
+            <!-- email broken with soft hyphens so it wraps cleanly -->
+            <a href="mailto:thedarkosmusicfoundation@gmail.com"
+               class="text-lg underline underline-offset-4 decoration-[#7f1d1d] hover:decoration-white transition-all"
+               style="word-break:break-all;overflow-wrap:anywhere;">
+              thedarkosmusicfoun&shy;dation<wbr />@gmail.com
             </a>
           </div>
         </div>
-
-        <!-- Bottom Bar -->
-        <div
-          class="flex flex-col md:flex-row items-center justify-between gap-6 text-lg opacity-60"
-        >
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-lg opacity-60">
           <p>Copyright TDMF 2026</p>
           <div class="flex gap-8">
             <p>Non-profit Status</p>
             <p>Privacy Policy</p>
           </div>
-          <button
-            onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-            class="hover:text-white transition-colors flex items-center gap-2"
-          >
-            Back to top
-            <iconify-icon icon="solar:arrow-up-linear"></iconify-icon>
+          <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hover:text-white transition-colors flex items-center gap-2">
+            Back to top <iconify-icon icon="solar:arrow-up-linear"></iconify-icon>
           </button>
         </div>
       </div>
     </footer>
+
     <script>
-      document.addEventListener("DOMContentLoaded", (event) => {
-        //const lenis = new Lenis();
+    // ═══════════════════════════════════════════════════
+    //  PRELOADER  — music-themed GSAP sequence
+    // ═══════════════════════════════════════════════════
+    (function () {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
 
-        lenis.on("scroll", ScrollTrigger.update);
+      // Position the 5 staff lines evenly across the vertical centre
+      const staffEls = [
+        document.getElementById('sl0'),
+        document.getElementById('sl1'),
+        document.getElementById('sl2'),
+        document.getElementById('sl3'),
+        document.getElementById('sl4'),
+      ];
+      const staffSpacing = 22;
+      const staffCenter  = vh * 0.5;
+      staffEls.forEach((el, i) => {
+        el.style.top = (staffCenter - staffSpacing * 2 + i * staffSpacing) + 'px';
+      });
 
-        function raf(time) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
+      // Position the note in the left quarter, on the middle staff line
+      const noteWrap = document.getElementById('pre-note-wrap');
+      noteWrap.style.left  = (vw * 0.18) + 'px';
+      noteWrap.style.top   = (staffCenter - staffSpacing * 2 - 28) + 'px'; // stem height above first line
+
+      const note     = document.getElementById('pre-note');
+      const noteStem = document.getElementById('pre-note-stem');
+      const counter  = document.getElementById('pre-counter');
+      const bars     = document.querySelectorAll('.pre-bar');
+      const wmInner  = document.getElementById('pre-wm-inner');
+      const curtain  = document.getElementById('pre-curtain');
+
+      const ease1 = 'power3.out';
+
+      const tl = gsap.timeline({
+        onComplete() { document.body.classList.remove('preloading'); }
+      });
+
+      // 1 — staff lines sweep in from left, staggered
+      tl.to(staffEls, {
+        width: '100%',
+        duration: 0.55,
+        ease: ease1,
+        stagger: 0.07
+      })
+
+      // 2 — note + stem pop in
+      .to([noteStem, note], { opacity: 1, duration: 0.25, ease: ease1 }, '-=0.15')
+
+      // 3 — note travels rightward along the staff, bobbing between lines
+      .to(noteWrap, {
+        x: vw * 0.64,
+        duration: 1.3,
+        ease: 'none',
+        motionPath: {
+          path: [
+            { x: 0,          y: 0  },
+            { x: vw * 0.12,  y: -staffSpacing * 1 },
+            { x: vw * 0.24,  y: staffSpacing  },
+            { x: vw * 0.36,  y: -staffSpacing * 2 },
+            { x: vw * 0.48,  y: 0  },
+            { x: vw * 0.56,  y: -staffSpacing },
+            { x: vw * 0.64,  y: 0  },
+          ]
         }
-        requestAnimationFrame(raf);
+      }, '-=0.05')
 
-        // Register GSAP ScrollTrigger
+      // 4 — counter fades in and counts up, timed with note travel
+      .to(counter, { opacity: 1, duration: 0.2 }, '<0.1')
+      .to({ n: 0 }, {
+        n: 100,
+        duration: 1.1,
+        ease: 'power1.inOut',
+        onUpdate() { counter.textContent = Math.round(this.targets()[0].n); }
+      }, '<')
+
+      // 5 — equaliser pumps
+      .to(bars, {
+        scaleY: () => 0.15 + Math.random() * 0.85,
+        duration: 0.15,
+        stagger: { each: 0.035, repeat: 5, yoyo: true },
+        ease: 'power1.inOut'
+      }, '<0.2')
+
+      // 6 — wordmark slides up
+      .to(wmInner, { y: 0, duration: 0.5, ease: ease1 }, '-=0.4')
+
+      // 7 — brief pause, then curtain folds up from bottom
+      .to(curtain, {
+        scaleY: 0,
+        duration: 0.65,
+        ease: 'power4.inOut',
+        transformOrigin: 'bottom'
+      }, '+=0.25')
+
+      // 8 — whole preloader exits upward
+      .to('#preloader', {
+        yPercent: -100,
+        duration: 0.55,
+        ease: 'power4.inOut',
+        onComplete() { document.getElementById('preloader').style.display = 'none'; }
+      }, '-=0.05');
+    })();
+
+    // ═══════════════════════════════════════════════════
+    //  MOBILE MENU
+    // ═══════════════════════════════════════════════════
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu    = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    mobileMenuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+      mobileMenuBtn.querySelector('iconify-icon').setAttribute('icon',
+        menuOpen ? 'solar:close-circle-linear' : 'solar:hamburger-menu-linear');
+    });
+    mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.remove('open');
+      mobileMenuBtn.querySelector('iconify-icon').setAttribute('icon','solar:hamburger-menu-linear');
+    }));
+
+    // ═══════════════════════════════════════════════════
+    //  VIDEO
+    // ═══════════════════════════════════════════════════
+    const video   = document.getElementById('story-video');
+    const overlay = document.getElementById('video-overlay');
+    function handleVideoPlayToggle() {
+      if (video.paused) { video.play(); overlay.classList.add('hidden-overlay'); }
+      else              { video.pause(); overlay.classList.remove('hidden-overlay'); }
+    }
+    video.addEventListener('ended', () => overlay.classList.remove('hidden-overlay'));
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+          if (video.paused) video.play().then(() => overlay.classList.add('hidden-overlay')).catch(()=>{});
+        } else {
+          if (!video.paused) { video.pause(); overlay.classList.remove('hidden-overlay'); }
+        }
+      });
+    }, { threshold: 0.5 }).observe(video);
+
+    // ═══════════════════════════════════════════════════
+    //  COPY BUTTONS
+    // ═══════════════════════════════════════════════════
+    let toastTimer = null;
+    function copyAccount(number, btn) {
+      navigator.clipboard.writeText(number).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<iconify-icon icon="solar:check-circle-bold" width="14"></iconify-icon> Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+        const toast = document.getElementById('copy-toast');
+        document.getElementById('copy-toast-msg').textContent = `Account ${number} copied!`;
+        toast.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+      }).catch(() => {
+        const ta = Object.assign(document.createElement('textarea'), { value: number });
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  GSAP + LENIS + SCROLL ANIMATIONS
+    // ═══════════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+      let lenisInstance = null;
+      const LenisClass = (typeof Lenis !== 'undefined' && typeof Lenis === 'function')
+        ? Lenis : (window.Lenis || null);
+
+      if (LenisClass) {
+        lenisInstance = new LenisClass({
+          duration: 1.2,
+          easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+        });
         gsap.registerPlugin(ScrollTrigger);
+        lenisInstance.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(time => lenisInstance.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      } else if (typeof lenis !== 'undefined') {
+        lenisInstance = lenis;
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.registerPlugin(ScrollTrigger);
+        (function r(t){ lenis.raf(t); requestAnimationFrame(r); })(0);
+      } else {
+        gsap.registerPlugin(ScrollTrigger);
+      }
 
-        // Initial Setup: Hide the text and push it down
-        gsap.set(".reveal-text", {
-          yPercent: 100,
-          autoAlpha: 0,
-        });
-
-        // ScrollTrigger Text Reveal Animation
-        const revealTexts = document.querySelectorAll(".reveal-text");
-
-        revealTexts.forEach((text, index) => {
-          gsap.to(text, {
-            scrollTrigger: {
-              trigger: text,
-              start: "top 90%",
-              once: true,
-            },
-            autoAlpha: 1,
-            yPercent: 0,
-            duration: 1.2,
-            ease: "power4.out",
-            delay: index * 0.1,
-          });
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute("href"));
-            if (target) {
-              lenis.scrollTo(target);
-            }
-          });
+      gsap.set('.reveal-text', { yPercent: 105, autoAlpha: 0 });
+      document.querySelectorAll('.reveal-text').forEach((el, i) => {
+        gsap.to(el, {
+          scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+          autoAlpha: 1, yPercent: 0,
+          duration: 1.1, ease: 'power4.out',
+          delay: i * 0.09,
         });
       });
+
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          const t = document.querySelector(a.getAttribute('href'));
+          if (!t) return;
+          if (lenisInstance) lenisInstance.scrollTo(t, { duration: 1.4, easing: t => Math.min(1,1.001-Math.pow(2,-10*t)) });
+          else t.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    });
     </script>
   </body>
 </html>
