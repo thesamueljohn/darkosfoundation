@@ -137,12 +137,13 @@
       #contact-close{
         position:absolute; top:1.25rem; right:1.25rem;
         width:2.2rem; height:2.2rem;
-        border-radius:50%; border:1.5px solid rgba(0,58,46,.2);
-        background:transparent; color:#003a2e;
+        border-radius:50%; border:none;
+        background:#003a2e; color:#fff;
         display:flex; align-items:center; justify-content:center;
-        cursor:pointer; transition:background .2s,border-color .2s;
+        cursor:pointer; transition:background .2s, transform .2s;
+        z-index: 10;
       }
-      #contact-close:hover{ background:#003a2e; color:#fff; border-color:#003a2e; }
+      #contact-close:hover{ background:#7f1d1d; transform:scale(1.1); }
 
       /* step indicator */
       #modal-steps{
@@ -363,18 +364,28 @@
         <div class="modal-pane" id="modal-pane-1">
           <label class="modal-label">Your email</label>
           <input id="modal-email" class="modal-input" type="email" placeholder="you@example.com" autocomplete="email" />
-          <button class="modal-btn" onclick="modalNext(1)">
-            Continue <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
-          </button>
+          <div class="flex items-center gap-3 mt-8">
+             <button class="w-12 h-[3.1rem] flex items-center justify-center rounded-full border-2 border-[#003a2e] text-[#003a2e] hover:bg-[#003a2e] hover:text-white transition-colors" onclick="modalBack(1)" aria-label="Go back">
+                <iconify-icon icon="solar:arrow-left-linear" width="18"></iconify-icon>
+             </button>
+             <button class="modal-btn !mt-0 flex-1 justify-center" onclick="modalNext(1)">
+               Continue <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+             </button>
+          </div>
         </div>
 
         <!-- Step 3 — Message -->
         <div class="modal-pane" id="modal-pane-2">
           <label class="modal-label">Your message</label>
-          <textarea id="modal-message" class="modal-input" placeholder="How can we help you?" rows="4"></textarea>
-          <button class="modal-btn" onclick="modalSubmit()">
-            Send message <iconify-icon icon="solar:paper-plane-bold" width="18"></iconify-icon>
-          </button>
+          <textarea id="modal-message" class="modal-input" placeholder="Please leave a message" rows="4"></textarea>
+          <div class="flex items-center gap-3 mt-8">
+             <button class="w-12 h-[3.1rem] flex items-center justify-center rounded-full border-2 border-[#003a2e] text-[#003a2e] hover:bg-[#003a2e] hover:text-white transition-colors" onclick="modalBack(2)" aria-label="Go back">
+                <iconify-icon icon="solar:arrow-left-linear" width="18"></iconify-icon>
+             </button>
+             <button id="modal-submit-btn" class="modal-btn !mt-0 flex-1 justify-center" onclick="modalSubmit()">
+               Send message <iconify-icon icon="solar:paper-plane-bold" width="18"></iconify-icon>
+             </button>
+          </div>
         </div>
 
         <!-- Success -->
@@ -393,7 +404,7 @@
       <div class="max-w-[1280px] mx-auto px-6 h-24 flex items-center justify-between relative">
         <div class="hidden lg:flex items-center gap-6 xl:gap-8 text-base xl:text-lg font-normal">
           <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Our Story</a>
-          <a href="#" class="hover:opacity-70 transition-opacity whitespace-nowrap">Our Work</a>
+          <a href="#features" class="hover:opacity-70 transition-opacity whitespace-nowrap">Our Work</a>
           <a href="#voices" class="hover:opacity-70 transition-opacity whitespace-nowrap">Voices</a>
           <a href="#" onclick="openContactModal(event)" class="hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer">Contact</a>
         </div>
@@ -414,7 +425,7 @@
       <div id="mobile-menu" class="lg:hidden bg-white/95 backdrop-blur-md border-t border-[#003A2E]/10 px-6">
         <div class="flex flex-col py-4 gap-1">
           <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Our Story</a>
-          <a href="#" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Our Work</a>
+          <a href="#features" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Our Work</a>
           <a href="#voices" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Voices</a>
           <a href="#" onclick="openContactModal(event)" class="py-3 text-lg font-medium hover:opacity-70 transition-opacity border-b border-[#003A2E]/10">Contact</a>
           <div class="flex gap-3 pt-4">
@@ -596,7 +607,7 @@
     </section>
 
     <!-- Features — flexible container, proper readable text -->
-    <section class="pt-6 pb-24">
+    <section id="features" class="pt-6 pb-24">
       <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-4">
 
         <div class="group cursor-pointer">
@@ -637,23 +648,58 @@
 
     <!-- Impact — hyphens on text boxes -->
     <section class="pb-24 bg-white">
-      <div class="max-w-[1280px] mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-          <div class="grid grid-cols-2 gap-4">
-            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/9.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
-            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
-            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
-            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/6.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
+      <div class="max-w-[1060px] mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-5xl md:text-7xl font-medium tracking-tight leading-[0.9] text-[#003A2E]">IMPACT<br /><span class="block mt-2">2025</span></h2>
+        </div>
+        <div class="flex flex-col gap-6">
+
+          <div class="group bg-white border-2 border-gray-200 rounded-[32px] p-4 md:p-5 flex flex-col sm:flex-row items-center gap-6 md:gap-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="w-full sm:w-[220px] aspect-video sm:aspect-square rounded-[24px] overflow-hidden flex-shrink-0 bg-gray-200">
+              <img src="./assets/images/hero/6.jpg" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Impact 1" />
+            </div>
+            <div class="flex-1 px-2 md:px-4 text-center sm:text-left">
+              <p class="text-xl md:text-2xl leading-relaxed text-[#003A2E] font-medium">Distributed (2) footballs to Government College Eric Moore, Surulere, Lagos.</p>
+            </div>
           </div>
-          <div class="flex items-center justify-center py-12 lg:py-0">
-            <h2 class="text-5xl md:text-7xl font-medium tracking-tight leading-[0.9] text-[#003A2E] text-center">IMPACT<br /><span class="block mt-2">2025</span></h2>
+
+          <div class="group bg-white border-2 border-gray-200 rounded-[32px] p-4 md:p-5 flex flex-col sm:flex-row items-center gap-6 md:gap-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="w-full sm:w-[220px] aspect-video sm:aspect-square rounded-[24px] overflow-hidden flex-shrink-0 bg-gray-200">
+              <img src="./assets/images/hero/13.jpg" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Impact 2" />
+            </div>
+            <div class="flex-1 px-2 md:px-4 text-center sm:text-left">
+              <p class="text-xl md:text-2xl leading-relaxed text-[#003A2E] font-medium">Distributed 120 books, Pencils, and Pens to Layeni Junior High School Ajegunle, Lagos.</p>
+            </div>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/10.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
-            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
-            <div class="aspect-squared bg-white border-2 border-gray-300 rounded-[16px] p-4 shadow-sm flex flex-col justify-between"><p class="text-sm md:text-base leading-snug opacity-80 break-word">Pro&shy;vid&shy;ing Com&shy;pre&shy;hen&shy;sive Music The&shy;ory, Prac&shy;ti&shy;cal In&shy;stru&shy;ment Train&shy;ing, And Dis&shy;ci&shy;plined.</p></div>
-            <div class="aspect-squared bg-gray-200 rounded-[16px] overflow-hidden"><img src="./assets/images/hero/9.jpg" loading="lazy" class="grayscale-[70%] w-full h-full object-cover" alt="" /></div>
+
+          <div class="group bg-white border-2 border-gray-200 rounded-[32px] p-4 md:p-5 flex flex-col sm:flex-row items-center gap-6 md:gap-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="w-full sm:w-[220px] aspect-video sm:aspect-square rounded-[24px] overflow-hidden flex-shrink-0 bg-gray-200">
+              <img src="./assets/images/hero/21.jpg" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Impact 3" />
+            </div>
+            <div class="flex-1 px-2 md:px-4 text-center sm:text-left">
+              <p class="text-xl md:text-2xl leading-relaxed text-[#003A2E] font-medium">Distributed 600 Sanitary Pads to Itolo Girls Senior Secondary School Eric Moore, Surulere, Lagos.</p>
+              <p class="text-sm md:text-base opacity-70 mt-3 font-medium">Social Change Through Community Music In Nigeria from The Darko's Music Foundation.</p>
+            </div>
           </div>
+
+          <div class="group bg-white border-2 border-gray-200 rounded-[32px] p-4 md:p-5 flex flex-col sm:flex-row items-center gap-6 md:gap-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="w-full sm:w-[220px] aspect-video sm:aspect-square rounded-[24px] overflow-hidden flex-shrink-0 bg-gray-200">
+              <img src="./assets/images/hero/12.jpg" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Impact 4" />
+            </div>
+            <div class="flex-1 px-2 md:px-4 text-center sm:text-left">
+              <p class="text-xl md:text-2xl leading-relaxed text-[#003A2E] font-medium">Featured at the Mountain Top University Department Of Music Organ House Concert Seminar series.</p>
+            </div>
+          </div>
+
+          <div class="group bg-white border-2 border-gray-200 rounded-[32px] p-4 md:p-5 flex flex-col sm:flex-row items-center gap-6 md:gap-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+            <div class="w-full sm:w-[220px] aspect-video sm:aspect-square rounded-[24px] overflow-hidden flex-shrink-0 bg-gray-200">
+              <img src="./assets/images/hero/7.jpg" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Impact 5" />
+            </div>
+            <div class="flex-1 px-2 md:px-4 text-center sm:text-left">
+              <p class="text-xl md:text-2xl leading-relaxed text-[#003A2E] font-medium">Trained over 100 students in Music Education.</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -720,34 +766,121 @@
     </section>
 
     <!-- Voices -->
-    <section id="voices" class="py-24 overflow-hidden">
+    <section id="voices" class="py-24 overflow-hidden bg-white">
       <div class="max-w-[1280px] mx-auto px-6">
-        <div class="relative">
-          <h2 class="text-4xl md:text-5xl font-medium mb-12">Voices</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="flex flex-col items-center text-center mb-16">
+          <div class="text-2xl font-medium mb-6 ">
+             Voices
+          </div>
+          <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-[#003A2E] max-w-2xl">
+            Words of praise about our impact.
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
             <div>
-              <p class="text-2xl md:text-3xl leading-relaxed font-light">
-                "Providing comprehensive music theory, practical instrument training, and disciplined instruction gave me a purpose I didn't know I needed."
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                Providing comprehensive music theory, practical instrument training, and disciplined instruction gave me a purpose I didn't know I needed.
               </p>
-              <div class="mt-8 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" loading="lazy" class="w-full h-full object-cover" alt="Sarah Jenkins" />
-                </div>
-                <div>
-                  <p class="font-bold">Sarah Jenkins</p>
-                  <p class="text-sm opacity-60">Alumni, Class of 2021</p>
-                </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Samuel Olamide" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Samuel Olamide</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Student, 2025</p>
               </div>
             </div>
-            <div class="relative">
-              <div class="absolute -top-12 -left-8 text-9xl font-gill font-bold text-[#003A2E]/5 select-none">&rdquo;</div>
-              <div class="bg-[#F8F9FA] p-8 rounded-[32px]">
-                <p class="text-xl italic opacity-80 mb-6">"The foundation didn't just teach my son to play the cello; they taught him patience, collaboration, and how to listen. Those skills are universal."</p>
-                <p class="font-bold">- Tolu Johnson, Student</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                The foundation didn't just teach my son to play the cello; they taught him patience, collaboration, and how to listen. Those skills are universal.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Tolu Johnson" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Tolu Johnson</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Parent</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                Being part of the organ house concert series pushed my musical boundaries. The mentorship is unparalleled and deeply encouraging.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1ebfa4?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Chioma Eze" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Chioma Eze</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Alumni</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                I lacked access to proper musical instruments until this foundation. They provided not just tools, but a vision for my bright future.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Emmanuel Ayodele" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Emmanuel Ayodele</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Student</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                Seeing the joy on the students' faces during our community outreach performances reminds me why music is a powerful tool for social change.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Grace Okonkwo" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Grace Okonkwo</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Volunteer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="bg-[#F8F9FA] border border-gray-100 rounded-[20px] p-8 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <div class="text-[#003A2E] text-5xl font-serif font-bold leading-none mb-4 tracking-[-4px] text-left opacity-90">“</div>
+              <p class="text-[15px] leading-relaxed text-[#003A2E]/90 font-medium mb-8 text-left">
+                Their commitment to offering equal opportunities regardless of gender or background is truly inspiring. A game-changer for Nigerian youths.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full object-cover" alt="Dr. Adebayo" />
+              <div class="text-left">
+                <p class="text-sm font-bold text-[#003A2E] leading-tight">Dr. Adebayo</p>
+                <p class="text-[11px] text-[#003A2E]/60 mt-0.5">Partner</p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -781,13 +914,13 @@
             <img src="./assets/images/logo-white.svg" class="w-20 md:w-28 mb-2" alt="Darko's Music Foundation logo" loading="lazy" />
             <a href="tel:+2347038267847" class="text-lg">+234 703 826 7847</a>
             <!-- email broken with soft hyphens so it wraps cleanly -->
-            <a href="/cdn-cgi/l/email-protection#64100c010005160f0b170911170d07020b110a0005100d0b0a240309050d084a070b09" class="text-lg underline underline-offset-4 decoration-[#7f1d1d] hover:decoration-white transition-all" style="word-break:break-all;overflow-wrap:anywhere;">
+            <a href="mailto:thedarkosmusicfoundation@gmail.com" class="text-lg underline underline-offset-4 decoration-[#7f1d1d] hover:decoration-white transition-all" style="word-break:break-all;overflow-wrap:anywhere;">
               thedarkosmusicfoun&shy;dation<wbr />@gmail.com
             </a>
           </div>
         </div>
         <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-lg opacity-60">
-          <p>Copyright TDMF 2026</p>
+          <p>Copyright TDMF <span id="current-year">2026</span></p>
           <div class="flex gap-8">
             <p>Non-profit Status - RN: 8199180</p>
           </div>
@@ -797,6 +930,7 @@
         </div>
       </div>
     </footer>
+    <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ═══════════════════════════════════════════════════
@@ -927,20 +1061,61 @@
       setTimeout(() => document.getElementById(focusEl).focus(), 50);
     }
 
+    function modalBack(currentStep) {
+      if (currentStep === 0) return;
+      const prev = currentStep - 1;
+      document.getElementById('modal-pane-' + currentStep).classList.remove('active');
+      document.getElementById('modal-pane-' + prev).classList.add('active');
+      modalGoTo(prev);
+    }
+
     function modalSubmit() {
       const msg = document.getElementById('modal-message').value.trim();
       if (!msg) { shakeInput('modal-message'); return; }
-      // Hide all panes, show success
-      document.querySelectorAll('.modal-pane').forEach(p => p.classList.remove('active'));
-      document.getElementById('modal-steps').style.opacity = '0';
-      const success = document.getElementById('modal-success');
-      success.style.display = 'block';
-      setTimeout(() => success.classList.add('active'), 10);
-      // Auto-close after 3s
-      setTimeout(() => {
-        closeContactModal();
-        setTimeout(() => { document.getElementById('modal-steps').style.opacity = ''; success.classList.remove('active'); success.style.display = 'none'; }, 400);
-      }, 3000);
+      
+      const btn = document.getElementById('modal-submit-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Sending... <iconify-icon icon="solar:spinner-broken" class="animate-spin ml-2"></iconify-icon>';
+      btn.style.pointerEvents = 'none';
+
+      const formData = new FormData();
+      formData.append('access_key', 'b8b27592-3d90-440b-beff-5c1bf215bd9e');
+      formData.append('name', document.getElementById('modal-name').value.trim());
+      formData.append('email', document.getElementById('modal-email').value.trim());
+      formData.append('message', msg);
+      formData.append('subject', 'New Contact from Darko\'s Music Foundation Website');
+      formData.append('from_name', 'TDMF Website');
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+
+        if (data.success) {
+          // Hide all panes, show success
+          document.querySelectorAll('.modal-pane').forEach(p => p.classList.remove('active'));
+          document.getElementById('modal-steps').style.opacity = '0';
+          const success = document.getElementById('modal-success');
+          success.style.display = 'block';
+          setTimeout(() => success.classList.add('active'), 10);
+          // Auto-close after 3s
+          setTimeout(() => {
+            closeContactModal();
+            setTimeout(() => { document.getElementById('modal-steps').style.opacity = ''; success.classList.remove('active'); success.style.display = 'none'; }, 400);
+          }, 3000);
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
+      })
+      .catch(() => {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+        alert('Network error. Please check your connection and try again.');
+      });
     }
 
     function shakeInput(id) {
